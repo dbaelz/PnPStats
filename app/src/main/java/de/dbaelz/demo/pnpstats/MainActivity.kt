@@ -9,12 +9,15 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
+import de.dbaelz.demo.pnpstats.ui.feature.overview.OverviewScreen
+import de.dbaelz.demo.pnpstats.ui.feature.overview.OverviewViewModel
 import de.dbaelz.demo.pnpstats.ui.theme.PnPStatsTheme
 
 @AndroidEntryPoint
@@ -72,7 +75,7 @@ private fun PnPStatsNavHost(
         modifier = modifier
     ) {
         composable(Screen.OVERVIEW.name) {
-            Text("${Screen.OVERVIEW.displayName} Screen")
+            OverviewDestination()
         }
 
         composable(Screen.EXPERIENCE.name) {
@@ -85,7 +88,13 @@ private fun PnPStatsNavHost(
     }
 }
 
-enum class Screen(val displayName: String) {
+@Composable
+private fun OverviewDestination() {
+    val viewModel: OverviewViewModel = hiltViewModel()
+    OverviewScreen(state = viewModel.viewState.value)
+}
+
+private enum class Screen(val displayName: String) {
     OVERVIEW("Overview"),
     EXPERIENCE("Experience"),
     CURRENCY("Currency"),
