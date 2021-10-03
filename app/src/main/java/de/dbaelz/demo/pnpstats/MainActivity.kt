@@ -85,6 +85,10 @@ private fun PnPStatsNavHost(
         composable(Screen.CURRENCY.name) {
             Text("${Screen.CURRENCY.displayName} Screen")
         }
+
+        composable(Screen.SETTINGS.name) {
+            Text("${Screen.SETTINGS.displayName} Screen")
+        }
     }
 }
 

@@ -2,7 +2,8 @@ package de.dbaelz.demo.pnpstats.ui.feature.overview
 
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import de.dbaelz.demo.pnpstats.data.CharacterRepository
+import de.dbaelz.demo.pnpstats.data.character.Character
+import de.dbaelz.demo.pnpstats.data.character.CharacterRepository
 import de.dbaelz.demo.pnpstats.ui.feature.BaseViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -13,12 +14,15 @@ class OverviewViewModel @Inject constructor(private val characterRepository: Cha
 
     init {
         viewModelScope.launch {
-            val character = characterRepository.getCharacter()
+            // TODO: Add use cases?
+            //val character = characterRepository.getCharacter(0)
+            val character = Character("Dummy Character", 42)
+
             updateState {
-                copy(characterName = character.name)
+                OverviewContract.State.CharacterInfo(character)
             }
         }
     }
 
-    override fun provideInitialState() = OverviewContract.State("")
+    override fun provideInitialState() = OverviewContract.State.Loading
 }
