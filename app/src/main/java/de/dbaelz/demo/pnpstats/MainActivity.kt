@@ -6,9 +6,10 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -40,6 +41,15 @@ class MainActivity : ComponentActivity() {
                             navController.popBackStack()
                         }
                     },
+                    bottomBar = {
+                        val currentScreen = route?.let { Screen.valueOf(it) } ?: Screen.OVERVIEW
+
+                        BottomBar(
+                            navController,
+                            currentScreen,
+                            listOf(Screen.OVERVIEW, Screen.EXPERIENCE, Screen.EXPERIENCE)
+                        )
+                    },
                     content = {
                         PnPStatsNavHost(navController, Modifier.padding(it))
                     }
@@ -63,6 +73,24 @@ private fun TopBar(title: String, withBackNavigation: Boolean, onBackPressed: ()
             null
         }
     )
+}
+
+@Composable
+private fun BottomBar(
+    navController: NavHostController,
+    currentScreen: Screen,
+    items: List<Screen>
+) {
+    BottomNavigation {
+        items.forEach { screen ->
+            BottomNavigationItem(
+                icon = { Icon(screen.icon, null) },
+                selected = screen == currentScreen,
+                onClick = {
+
+                })
+        }
+    }
 }
 
 @Composable
@@ -111,9 +139,9 @@ private fun OverviewDestination(navController: NavHostController) {
     )
 }
 
-private enum class Screen(val displayName: String) {
-    OVERVIEW("Overview"),
-    EXPERIENCE("Experience"),
-    CURRENCY("Currency"),
-    SETTINGS("Settings")
+private enum class Screen(val displayName: String, val icon: ImageVector) {
+    OVERVIEW("Overview", Icons.Default.Home),
+    EXPERIENCE("Experience", Icons.Default.Info),
+    CURRENCY("Currency", Icons.Default.AccountBox),
+    SETTINGS("Settings", Icons.Default.Settings),
 }

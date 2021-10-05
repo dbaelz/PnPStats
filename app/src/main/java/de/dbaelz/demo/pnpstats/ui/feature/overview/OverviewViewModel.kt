@@ -3,6 +3,7 @@ package de.dbaelz.demo.pnpstats.ui.feature.overview
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.dbaelz.demo.pnpstats.data.PreferenceRepository
+import de.dbaelz.demo.pnpstats.data.common.ApiResult
 import de.dbaelz.demo.pnpstats.data.character.CharacterRepository
 import de.dbaelz.demo.pnpstats.ui.feature.BaseViewModel
 import kotlinx.coroutines.flow.first
@@ -44,15 +45,17 @@ class OverviewViewModel @Inject constructor(
     private suspend fun getCharacter() {
         // TODO: Move into UseCase?
         val characterId = preferenceRepository.getLastCharacterId().first()
-        try {
-            val character = characterRepository.getCharacter(characterId)
-            updateState {
-                OverviewContract.State.CharacterInfo(character)
+        when (val result = characterRepository.getCharacter(characterId)) {
+            is ApiResult.Success -> {
+                updateState {
+                    OverviewContract.State.CharacterInfo(result.value)
+                }
             }
-        } catch (exception: NoSuchElementException) {
-            val characters = characterRepository.getCharacters()
-            updateState {
-                OverviewContract.State.CharacterSelection(characters)
+            is ApiResult.Error -> {
+                val characters = characterRepository.getCharacters()
+                updateState {
+                    OverviewContract.State.CharacterSelection(characters)
+                }
             }
         }
     }
