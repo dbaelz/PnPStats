@@ -3,8 +3,8 @@ package de.dbaelz.demo.pnpstats.ui.feature.overview
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.dbaelz.demo.pnpstats.data.PreferenceRepository
-import de.dbaelz.demo.pnpstats.data.common.ApiResult
 import de.dbaelz.demo.pnpstats.data.character.CharacterRepository
+import de.dbaelz.demo.pnpstats.data.common.ApiResult
 import de.dbaelz.demo.pnpstats.ui.feature.BaseViewModel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -28,19 +28,7 @@ class OverviewViewModel @Inject constructor(
 
     override fun provideInitialState() = OverviewContract.State.Loading
 
-    override fun handleEvent(event: OverviewContract.Event) {
-        when (event) {
-            is OverviewContract.Event.CharacterSelected -> {
-                viewModelScope.launch {
-                    preferenceRepository.setLastCharacterId(event.id)
-
-                    getCharacter()
-
-                    setEffect { OverviewContract.Effect.Navigation.ToCharacterOverview(event.id) }
-                }
-            }
-        }
-    }
+    override fun handleEvent(event: OverviewContract.Event) {}
 
     private suspend fun getCharacter() {
         // TODO: Move into UseCase?
@@ -52,10 +40,8 @@ class OverviewViewModel @Inject constructor(
                 }
             }
             is ApiResult.Error -> {
-                val characters = characterRepository.getCharacters()
-                updateState {
-                    OverviewContract.State.CharacterSelection(characters)
-                }
+                setEffect { OverviewContract.Effect.ErrorLoadingCharacter }
+                setEffect { OverviewContract.Effect.Navigation.ToCharacters }
             }
         }
     }

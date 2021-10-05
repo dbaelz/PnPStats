@@ -17,6 +17,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
+import de.dbaelz.demo.pnpstats.ui.feature.characters.CharactersContract
+import de.dbaelz.demo.pnpstats.ui.feature.characters.CharactersScreen
+import de.dbaelz.demo.pnpstats.ui.feature.characters.CharactersViewModel
 import de.dbaelz.demo.pnpstats.ui.feature.overview.OverviewContract
 import de.dbaelz.demo.pnpstats.ui.feature.overview.OverviewScreen
 import de.dbaelz.demo.pnpstats.ui.feature.overview.OverviewViewModel
@@ -37,9 +40,7 @@ class MainActivity : ComponentActivity() {
                         val title =
                             route?.let { Screen.valueOf(it).displayName }
                                 ?: Screen.OVERVIEW.displayName
-                        TopBar(title, route != Screen.OVERVIEW.name) {
-                            navController.popBackStack()
-                        }
+                        TopBar(navController, title)
                     },
                     bottomBar = {
                         val currentScreen = route?.let { Screen.valueOf(it) } ?: Screen.OVERVIEW
@@ -47,7 +48,12 @@ class MainActivity : ComponentActivity() {
                         BottomBar(
                             navController,
                             currentScreen,
-                            listOf(Screen.OVERVIEW, Screen.EXPERIENCE, Screen.EXPERIENCE)
+                            listOf(
+                                Screen.OVERVIEW,
+                                Screen.EXPERIENCE,
+                                Screen.CURRENCY,
+                                Screen.SETTINGS
+                            )
                         )
                     },
                     content = {
@@ -60,17 +66,13 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-private fun TopBar(title: String, withBackNavigation: Boolean, onBackPressed: () -> Unit) {
+private fun TopBar(navController: NavHostController, title: String) {
     TopAppBar(
         title = { Text(title) },
-        navigationIcon = if (withBackNavigation) {
-            {
-                IconButton(onClick = onBackPressed) {
-                    Icon(Icons.Default.ArrowBack, null)
-                }
+        actions = {
+            IconButton(onClick = { navController.navigate(Screen.CHARACTERS.name) }) {
+                Icon(Screen.CHARACTERS.icon, null)
             }
-        } else {
-            null
         }
     )
 }
@@ -86,9 +88,8 @@ private fun BottomBar(
             BottomNavigationItem(
                 icon = { Icon(screen.icon, null) },
                 selected = screen == currentScreen,
-                onClick = {
-
-                })
+                onClick = { navController.navigate(screen.name) }
+            )
         }
     }
 }
@@ -103,6 +104,10 @@ private fun PnPStatsNavHost(
         startDestination = Screen.OVERVIEW.name,
         modifier = modifier
     ) {
+        composable(Screen.CHARACTERS.name) {
+            CharactersDestination(navController)
+        }
+
         composable(Screen.OVERVIEW.name) {
             OverviewDestination(navController)
         }
@@ -122,15 +127,15 @@ private fun PnPStatsNavHost(
 }
 
 @Composable
-private fun OverviewDestination(navController: NavHostController) {
-    val viewModel: OverviewViewModel = hiltViewModel()
-    OverviewScreen(
+private fun CharactersDestination(navController: NavHostController) {
+    val viewModel: CharactersViewModel = hiltViewModel()
+    CharactersScreen(
         state = viewModel.viewState.value,
         effectFlow = viewModel.effect,
         onEvent = { viewModel.processEvent(it) },
         onNavigation = { navigation ->
             when (navigation) {
-                is OverviewContract.Effect.Navigation.ToCharacterOverview -> {
+                is CharactersContract.Effect.Navigation.ToOverview -> {
                     navController.navigate(Screen.OVERVIEW.name)
                 }
             }
@@ -139,7 +144,32 @@ private fun OverviewDestination(navController: NavHostController) {
     )
 }
 
+@Composable
+private fun OverviewDestination(navController: NavHostController) {
+    val viewModel: OverviewViewModel = hiltViewModel()
+    OverviewScreen(
+        state = viewModel.viewState.value,
+        effectFlow = viewModel.effect,
+        onEvent = { viewModel.processEvent(it) },
+        onNavigation = { navigation ->
+            when (navigation) {
+                OverviewContract.Effect.Navigation.ToCharacters -> {
+                    navController.navigate(Screen.CHARACTERS.name)
+                }
+                is OverviewContract.Effect.Navigation.ToExperience -> {
+                    navController.navigate(Screen.EXPERIENCE.name)
+                }
+                is OverviewContract.Effect.Navigation.ToCurrency -> {
+                    navController.navigate(Screen.CURRENCY.name)
+                }
+            }
+        }
+
+    )
+}
+
 private enum class Screen(val displayName: String, val icon: ImageVector) {
+    CHARACTERS("Characters", Icons.Default.Person),
     OVERVIEW("Overview", Icons.Default.Home),
     EXPERIENCE("Experience", Icons.Default.Info),
     CURRENCY("Currency", Icons.Default.AccountBox),
