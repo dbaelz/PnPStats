@@ -9,6 +9,8 @@ Heavily inspired by the [Foodies App](https://github.com/catalinghita8/android-c
 - Jetpack Compose
 - Android Architecture Components (Navigation, ViewModel, ...)
 - Dagger and Hilt
+- Room
+- Preference DataStore
 
 
 ## Contribution

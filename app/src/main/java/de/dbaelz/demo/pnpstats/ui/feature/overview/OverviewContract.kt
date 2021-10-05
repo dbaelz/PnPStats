@@ -6,12 +6,6 @@ import de.dbaelz.demo.pnpstats.ui.feature.ViewSideEffect
 import de.dbaelz.demo.pnpstats.ui.feature.ViewState
 
 class OverviewContract {
-    // TODO: Only dummy events
-    sealed class Event : ViewEvent {
-        object ExperienceSelection : Event()
-        object CurrencySelection : Event()
-    }
-
     sealed class State : ViewState {
         object Loading : State()
         data class CharacterSelection(val characters: List<Character>) : State()
@@ -19,8 +13,14 @@ class OverviewContract {
     }
 
 
-    // TODO: Only dummy effect
+    sealed class Event : ViewEvent {
+        data class CharacterSelected(val id: Int) : Event()
+    }
+
+
     sealed class Effect : ViewSideEffect {
-        object LoadData : Effect()
+        sealed class Navigation : Effect() {
+            data class ToCharacterOverview(val id: Int) : Navigation()
+        }
     }
 }

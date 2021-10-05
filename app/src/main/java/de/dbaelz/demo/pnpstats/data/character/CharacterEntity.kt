@@ -6,11 +6,16 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class CharacterEntity(
-    @PrimaryKey(autoGenerate = true) val id: Int,
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val name: String,
-    val experience: Int,
-    @Embedded val currency: Currency,
-    val notes: String
+    val experience: Int = 0,
+    @Embedded val currency: Currency = Currency(),
+    val notes: String = ""
 ) {
-    data class Currency(val platinum: Int, val gold: Int, val silver: Int, val copper: Int)
+    data class Currency(
+        val platinum: Int = 0,
+        val gold: Int = 0,
+        val silver: Int = 0,
+        val copper: Int = 0
+    )
 }

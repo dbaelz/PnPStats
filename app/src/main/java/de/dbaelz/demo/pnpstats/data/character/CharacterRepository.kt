@@ -18,11 +18,7 @@ class CharacterRepository @Inject constructor(private val characterDao: Characte
 
         withContext(Dispatchers.IO) {
             val entity = characterDao.selectById(characterId)
-            character = if (entity != null) {
-                Character(entity.name, entity.experience)
-            } else {
-                throw NoSuchElementException()
-            }
+            character = entity?.toCharacter() ?: throw NoSuchElementException()
         }
 
         return character
@@ -33,14 +29,22 @@ class CharacterRepository @Inject constructor(private val characterDao: Characte
 
         withContext(Dispatchers.IO) {
             characterDao.select().forEach {
-                characters.add(
-                    Character(it.name, it.experience, it.notes)
-                )
+                characters.add(it.toCharacter())
             }
         }
 
         return characters
     }
+
+    suspend fun addCharacter(name: String) {
+        withContext(Dispatchers.IO) {
+            characterDao.insert(CharacterEntity(name = name))
+        }
+    }
+
+    private fun CharacterEntity.toCharacter(): Character {
+        return Character(id, name, experience, notes)
+    }
 }
 
-data class Character(val name: String, val experience: Int, val notes: String = "")
+data class Character(val id: Int, val name: String, val experience: Int, val notes: String = "")

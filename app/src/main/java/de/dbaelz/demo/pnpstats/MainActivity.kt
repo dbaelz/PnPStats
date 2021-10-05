@@ -16,6 +16,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
+import de.dbaelz.demo.pnpstats.ui.feature.overview.OverviewContract
 import de.dbaelz.demo.pnpstats.ui.feature.overview.OverviewScreen
 import de.dbaelz.demo.pnpstats.ui.feature.overview.OverviewViewModel
 import de.dbaelz.demo.pnpstats.ui.theme.PnPStatsTheme
@@ -75,7 +76,7 @@ private fun PnPStatsNavHost(
         modifier = modifier
     ) {
         composable(Screen.OVERVIEW.name) {
-            OverviewDestination()
+            OverviewDestination(navController)
         }
 
         composable(Screen.EXPERIENCE.name) {
@@ -93,9 +94,21 @@ private fun PnPStatsNavHost(
 }
 
 @Composable
-private fun OverviewDestination() {
+private fun OverviewDestination(navController: NavHostController) {
     val viewModel: OverviewViewModel = hiltViewModel()
-    OverviewScreen(state = viewModel.viewState.value)
+    OverviewScreen(
+        state = viewModel.viewState.value,
+        effectFlow = viewModel.effect,
+        onEvent = { viewModel.processEvent(it) },
+        onNavigation = { navigation ->
+            when (navigation) {
+                is OverviewContract.Effect.Navigation.ToCharacterOverview -> {
+                    navController.navigate(Screen.OVERVIEW.name)
+                }
+            }
+        }
+
+    )
 }
 
 private enum class Screen(val displayName: String) {
