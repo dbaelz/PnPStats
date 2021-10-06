@@ -33,22 +33,24 @@ class MainActivity : ComponentActivity() {
             PnPStatsTheme {
                 val navController = rememberNavController()
                 val backstackEntry = navController.currentBackStackEntryAsState()
-                val route = backstackEntry.value?.destination?.route
+                val currentScreen = backstackEntry.value?.destination?.route?.let {
+                    Screen.valueOf(it)
+                } ?: Screen.CHARACTERS
 
                 Scaffold(
                     topBar = {
-                        val title =
-                            route?.let { Screen.valueOf(it).displayName }
-                                ?: Screen.OVERVIEW.displayName
-                        TopBar(navController, title)
+                        TopBar(navController, currentScreen.displayName)
+                    },
+                    floatingActionButton = {
+                        NewCharacterActionButton(currentScreen) {
+                            
+                        }
                     },
                     bottomBar = {
-                        val currentScreen = route?.let { Screen.valueOf(it) } ?: Screen.OVERVIEW
-
                         BottomBar(
-                            navController,
-                            currentScreen,
-                            listOf(
+                            navController = navController,
+                            currentScreen = currentScreen,
+                            items = listOf(
                                 Screen.OVERVIEW,
                                 Screen.EXPERIENCE,
                                 Screen.CURRENCY,
@@ -75,6 +77,15 @@ private fun TopBar(navController: NavHostController, title: String) {
             }
         }
     )
+}
+
+@Composable
+private fun NewCharacterActionButton(currentScreen: Screen, onActionButtonClicked: () -> Unit) {
+    if (currentScreen == Screen.CHARACTERS) {
+        FloatingActionButton(onClick = onActionButtonClicked) {
+            Icon(Icons.Default.Add, null)
+        }
+    }
 }
 
 @Composable

@@ -9,7 +9,6 @@ import de.dbaelz.demo.pnpstats.ui.feature.BaseViewModel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.random.Random
 
 @HiltViewModel
 class OverviewViewModel @Inject constructor(
@@ -19,9 +18,6 @@ class OverviewViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            // TODO: Only for testing, cause I'm lazy
-            characterRepository.addCharacter("Character " + Random.nextInt())
-
             getCharacter()
         }
     }
