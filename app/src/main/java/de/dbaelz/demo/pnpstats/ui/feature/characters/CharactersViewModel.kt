@@ -23,7 +23,7 @@ class CharactersViewModel @Inject constructor(
         }
     }
 
-    override fun provideInitialState(): CharactersContract.State = CharactersContract.State.Loading
+    override fun provideInitialState() = CharactersContract.State.Loading
 
     override fun handleEvent(event: CharactersContract.Event) {
         when (event) {

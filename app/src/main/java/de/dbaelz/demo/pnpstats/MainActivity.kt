@@ -20,6 +20,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import de.dbaelz.demo.pnpstats.ui.feature.characters.CharactersContract
 import de.dbaelz.demo.pnpstats.ui.feature.characters.CharactersScreen
 import de.dbaelz.demo.pnpstats.ui.feature.characters.CharactersViewModel
+import de.dbaelz.demo.pnpstats.ui.feature.createcharacter.CreateCharacterScreen
+import de.dbaelz.demo.pnpstats.ui.feature.createcharacter.CreateCharacterViewModel
 import de.dbaelz.demo.pnpstats.ui.feature.overview.OverviewContract
 import de.dbaelz.demo.pnpstats.ui.feature.overview.OverviewScreen
 import de.dbaelz.demo.pnpstats.ui.feature.overview.OverviewViewModel
@@ -42,8 +44,8 @@ class MainActivity : ComponentActivity() {
                         TopBar(navController, currentScreen.displayName)
                     },
                     floatingActionButton = {
-                        NewCharacterActionButton(currentScreen) {
-                            
+                        CreateCharacterActionButton(currentScreen) {
+                            navController.navigate(Screen.CREATE_CHARACTER.route)
                         }
                     },
                     bottomBar = {
@@ -72,7 +74,7 @@ private fun TopBar(navController: NavHostController, title: String) {
     TopAppBar(
         title = { Text(title) },
         actions = {
-            IconButton(onClick = { navController.navigate(Screen.CHARACTERS.name) }) {
+            IconButton(onClick = { navController.navigate(Screen.CHARACTERS.route) }) {
                 Icon(Screen.CHARACTERS.icon, null)
             }
         }
@@ -80,7 +82,7 @@ private fun TopBar(navController: NavHostController, title: String) {
 }
 
 @Composable
-private fun NewCharacterActionButton(currentScreen: Screen, onActionButtonClicked: () -> Unit) {
+private fun CreateCharacterActionButton(currentScreen: Screen, onActionButtonClicked: () -> Unit) {
     if (currentScreen == Screen.CHARACTERS) {
         FloatingActionButton(onClick = onActionButtonClicked) {
             Icon(Icons.Default.Add, null)
@@ -99,7 +101,7 @@ private fun BottomBar(
             BottomNavigationItem(
                 icon = { Icon(screen.icon, null) },
                 selected = screen == currentScreen,
-                onClick = { navController.navigate(screen.name) }
+                onClick = { navController.navigate(screen.route) }
             )
         }
     }
@@ -112,26 +114,30 @@ private fun PnPStatsNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Screen.OVERVIEW.name,
+        startDestination = Screen.OVERVIEW.route,
         modifier = modifier
     ) {
-        composable(Screen.CHARACTERS.name) {
+        composable(Screen.CHARACTERS.route) {
             CharactersDestination(navController)
         }
 
-        composable(Screen.OVERVIEW.name) {
+        composable(Screen.CREATE_CHARACTER.route) {
+            CreateCharacterDestination(navController)
+        }
+
+        composable(Screen.OVERVIEW.route) {
             OverviewDestination(navController)
         }
 
-        composable(Screen.EXPERIENCE.name) {
+        composable(Screen.EXPERIENCE.route) {
             Text("${Screen.EXPERIENCE.displayName} Screen")
         }
 
-        composable(Screen.CURRENCY.name) {
+        composable(Screen.CURRENCY.route) {
             Text("${Screen.CURRENCY.displayName} Screen")
         }
 
-        composable(Screen.SETTINGS.name) {
+        composable(Screen.SETTINGS.route) {
             Text("${Screen.SETTINGS.displayName} Screen")
         }
     }
@@ -147,11 +153,21 @@ private fun CharactersDestination(navController: NavHostController) {
         onNavigation = { navigation ->
             when (navigation) {
                 is CharactersContract.Effect.Navigation.ToOverview -> {
-                    navController.navigate(Screen.OVERVIEW.name)
+                    navController.navigate(Screen.OVERVIEW.route)
                 }
             }
         }
 
+    )
+}
+
+@Composable
+private fun CreateCharacterDestination(navController: NavHostController) {
+    val viewModel: CreateCharacterViewModel = hiltViewModel()
+    CreateCharacterScreen(
+        effectFlow = viewModel.effect,
+        onEvent = { viewModel.processEvent(it) },
+        onNavigation = { navController.navigate(Screen.CHARACTERS.route) }
     )
 }
 
@@ -165,13 +181,13 @@ private fun OverviewDestination(navController: NavHostController) {
         onNavigation = { navigation ->
             when (navigation) {
                 OverviewContract.Effect.Navigation.ToCharacters -> {
-                    navController.navigate(Screen.CHARACTERS.name)
+                    navController.navigate(Screen.CHARACTERS.route)
                 }
                 is OverviewContract.Effect.Navigation.ToExperience -> {
-                    navController.navigate(Screen.EXPERIENCE.name)
+                    navController.navigate(Screen.EXPERIENCE.route)
                 }
                 is OverviewContract.Effect.Navigation.ToCurrency -> {
-                    navController.navigate(Screen.CURRENCY.name)
+                    navController.navigate(Screen.CURRENCY.route)
                 }
             }
         }
@@ -181,8 +197,11 @@ private fun OverviewDestination(navController: NavHostController) {
 
 private enum class Screen(val displayName: String, val icon: ImageVector) {
     CHARACTERS("Characters", Icons.Default.Person),
+    CREATE_CHARACTER("Create Character", Icons.Default.Person),
     OVERVIEW("Overview", Icons.Default.Home),
     EXPERIENCE("Experience", Icons.Default.Info),
     CURRENCY("Currency", Icons.Default.AccountBox),
-    SETTINGS("Settings", Icons.Default.Settings),
+    SETTINGS("Settings", Icons.Default.Settings);
+
+    val route = name
 }

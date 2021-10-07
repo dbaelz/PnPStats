@@ -37,14 +37,23 @@ class CharacterRepository @Inject constructor(private val characterDao: Characte
         return characters
     }
 
-    suspend fun addCharacter(name: String) {
+    suspend fun storeCharacter(character: Character) {
         withContext(Dispatchers.IO) {
-            characterDao.insert(CharacterEntity(name = name))
+            characterDao.insert(character.toEntity())
         }
     }
 
     private fun CharacterEntity.toCharacter(): Character {
         return Character(id, name, experience, notes)
+    }
+
+    private fun Character.toEntity(): CharacterEntity {
+        return CharacterEntity(
+            name = name,
+            experience = experience,
+            currency = CharacterEntity.Currency(),
+            notes = notes
+        )
     }
 }
 

@@ -11,10 +11,7 @@ class OverviewContract {
         data class CharacterInfo(val character: Character) : State()
     }
 
-
-    sealed class Event : ViewEvent {
-
-    }
+    object Event : ViewEvent
 
     sealed class Effect : ViewSideEffect {
         object ErrorLoadingCharacter : Effect()
