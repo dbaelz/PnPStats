@@ -57,4 +57,4 @@ class CharacterRepository @Inject constructor(private val characterDao: Characte
     }
 }
 
-data class Character(val id: Int, val name: String, val experience: Int, val notes: String = "")
+data class Character(val id: Int = 0, val name: String, val experience: Int = 0, val notes: String = "")
