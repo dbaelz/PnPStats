@@ -22,6 +22,9 @@ import de.dbaelz.demo.pnpstats.ui.feature.characters.CharactersScreen
 import de.dbaelz.demo.pnpstats.ui.feature.characters.CharactersViewModel
 import de.dbaelz.demo.pnpstats.ui.feature.createcharacter.CreateCharacterScreen
 import de.dbaelz.demo.pnpstats.ui.feature.createcharacter.CreateCharacterViewModel
+import de.dbaelz.demo.pnpstats.ui.feature.experience.ExperienceContract
+import de.dbaelz.demo.pnpstats.ui.feature.experience.ExperienceScreen
+import de.dbaelz.demo.pnpstats.ui.feature.experience.ExperienceViewModel
 import de.dbaelz.demo.pnpstats.ui.feature.overview.OverviewContract
 import de.dbaelz.demo.pnpstats.ui.feature.overview.OverviewScreen
 import de.dbaelz.demo.pnpstats.ui.feature.overview.OverviewViewModel
@@ -130,7 +133,7 @@ private fun PnPStatsNavHost(
         }
 
         composable(Screen.EXPERIENCE.route) {
-            Text("${Screen.EXPERIENCE.displayName} Screen")
+            ExperienceDestination(navController)
         }
 
         composable(Screen.CURRENCY.route) {
@@ -189,6 +192,24 @@ private fun OverviewDestination(navController: NavHostController) {
                 is OverviewContract.Effect.Navigation.ToCurrency -> {
                     navController.navigate(Screen.CURRENCY.route)
                 }
+            }
+        }
+
+    )
+}
+
+@Composable
+private fun ExperienceDestination(navController: NavHostController) {
+    val viewModel: ExperienceViewModel = hiltViewModel()
+    ExperienceScreen(
+        state = viewModel.viewState.value,
+        effectFlow = viewModel.effect,
+        onEvent = { viewModel.processEvent(it) },
+        onNavigation = { navigation ->
+            when (navigation) {
+                ExperienceContract.Effect.Navigation.ToCharacters ->  navController.navigate(Screen.CHARACTERS.route)
+                is ExperienceContract.Effect.Navigation.ToCurrency -> navController.navigate(Screen.CURRENCY.route)
+                is ExperienceContract.Effect.Navigation.ToOverview -> navController.navigate(Screen.OVERVIEW.route)
             }
         }
 
