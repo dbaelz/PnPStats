@@ -22,6 +22,9 @@ import de.dbaelz.demo.pnpstats.ui.feature.characters.CharactersScreen
 import de.dbaelz.demo.pnpstats.ui.feature.characters.CharactersViewModel
 import de.dbaelz.demo.pnpstats.ui.feature.createcharacter.CreateCharacterScreen
 import de.dbaelz.demo.pnpstats.ui.feature.createcharacter.CreateCharacterViewModel
+import de.dbaelz.demo.pnpstats.ui.feature.currency.CurrencyContract
+import de.dbaelz.demo.pnpstats.ui.feature.currency.CurrencyScreen
+import de.dbaelz.demo.pnpstats.ui.feature.currency.CurrencyViewModel
 import de.dbaelz.demo.pnpstats.ui.feature.experience.ExperienceContract
 import de.dbaelz.demo.pnpstats.ui.feature.experience.ExperienceScreen
 import de.dbaelz.demo.pnpstats.ui.feature.experience.ExperienceViewModel
@@ -137,7 +140,7 @@ private fun PnPStatsNavHost(
         }
 
         composable(Screen.CURRENCY.route) {
-            Text("${Screen.CURRENCY.displayName} Screen")
+            CurrencyDestination(navController)
         }
 
         composable(Screen.SETTINGS.route) {
@@ -160,7 +163,6 @@ private fun CharactersDestination(navController: NavHostController) {
                 }
             }
         }
-
     )
 }
 
@@ -194,7 +196,6 @@ private fun OverviewDestination(navController: NavHostController) {
                 }
             }
         }
-
     )
 }
 
@@ -207,12 +208,28 @@ private fun ExperienceDestination(navController: NavHostController) {
         onEvent = { viewModel.processEvent(it) },
         onNavigation = { navigation ->
             when (navigation) {
-                ExperienceContract.Effect.Navigation.ToCharacters ->  navController.navigate(Screen.CHARACTERS.route)
+                ExperienceContract.Effect.Navigation.ToCharacters -> navController.navigate(Screen.CHARACTERS.route)
                 is ExperienceContract.Effect.Navigation.ToCurrency -> navController.navigate(Screen.CURRENCY.route)
                 is ExperienceContract.Effect.Navigation.ToOverview -> navController.navigate(Screen.OVERVIEW.route)
             }
         }
+    )
+}
 
+@Composable
+private fun CurrencyDestination(navController: NavHostController) {
+    val viewModel: CurrencyViewModel = hiltViewModel()
+    CurrencyScreen(
+        state = viewModel.viewState.value,
+        effectFlow = viewModel.effect,
+        onEvent = { viewModel.processEvent(it) },
+        onNavigation = { navigation ->
+            when (navigation) {
+                CurrencyContract.Effect.Navigation.ToCharacters -> navController.navigate(Screen.CHARACTERS.route)
+                is CurrencyContract.Effect.Navigation.ToExperience -> navController.navigate(Screen.EXPERIENCE.route)
+                is CurrencyContract.Effect.Navigation.ToOverview -> navController.navigate(Screen.OVERVIEW.route)
+            }
+        }
     )
 }
 

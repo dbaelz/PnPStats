@@ -44,17 +44,41 @@ class CharacterRepository @Inject constructor(private val characterDao: Characte
     }
 
     private fun CharacterEntity.toCharacter(): Character {
-        return Character(id, name, experience, notes)
+        return Character(
+            id,
+            name,
+            experience,
+            Character.Currency(currency.platinum, currency.gold, currency.silver, currency.copper),
+            notes
+        )
     }
 
     private fun Character.toEntity(): CharacterEntity {
         return CharacterEntity(
             name = name,
             experience = experience,
-            currency = CharacterEntity.Currency(),
+            currency = CharacterEntity.Currency(
+                currency.platinum,
+                currency.gold,
+                currency.silver,
+                currency.copper
+            ),
             notes = notes
         )
     }
 }
 
-data class Character(val id: Int = 0, val name: String, val experience: Int = 0, val notes: String = "")
+data class Character(
+    val id: Int = 0,
+    val name: String,
+    val experience: Int = 0,
+    val currency: Currency = Currency(),
+    val notes: String = ""
+) {
+    data class Currency(
+        val platinum: Int = 0,
+        val gold: Int = 0,
+        val silver: Int = 0,
+        val copper: Int = 0
+    )
+}
