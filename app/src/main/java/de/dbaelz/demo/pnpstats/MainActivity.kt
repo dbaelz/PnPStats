@@ -209,8 +209,6 @@ private fun ExperienceDestination(navController: NavHostController) {
         onNavigation = { navigation ->
             when (navigation) {
                 ExperienceContract.Effect.Navigation.ToCharacters -> navController.navigate(Screen.CHARACTERS.route)
-                is ExperienceContract.Effect.Navigation.ToCurrency -> navController.navigate(Screen.CURRENCY.route)
-                is ExperienceContract.Effect.Navigation.ToOverview -> navController.navigate(Screen.OVERVIEW.route)
             }
         }
     )
@@ -226,8 +224,6 @@ private fun CurrencyDestination(navController: NavHostController) {
         onNavigation = { navigation ->
             when (navigation) {
                 CurrencyContract.Effect.Navigation.ToCharacters -> navController.navigate(Screen.CHARACTERS.route)
-                is CurrencyContract.Effect.Navigation.ToExperience -> navController.navigate(Screen.EXPERIENCE.route)
-                is CurrencyContract.Effect.Navigation.ToOverview -> navController.navigate(Screen.OVERVIEW.route)
             }
         }
     )

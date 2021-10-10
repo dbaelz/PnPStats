@@ -18,8 +18,6 @@ class CurrencyContract {
 
         sealed class Navigation : Effect() {
             object ToCharacters : Navigation()
-            data class ToOverview(val id: Int) : Navigation()
-            data class ToExperience(val id: Int) : Navigation()
         }
     }
 }
