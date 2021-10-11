@@ -2,18 +2,15 @@ package de.dbaelz.demo.pnpstats.ui.feature.currency
 
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import de.dbaelz.demo.pnpstats.data.PreferenceRepository
-import de.dbaelz.demo.pnpstats.data.character.CharacterRepository
+import de.dbaelz.demo.pnpstats.data.character.GetCharacterUseCase
 import de.dbaelz.demo.pnpstats.data.common.ApiResult
 import de.dbaelz.demo.pnpstats.ui.feature.BaseViewModel
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class CurrencyViewModel @Inject constructor(
-    private val preferenceRepository: PreferenceRepository,
-    private val characterRepository: CharacterRepository
+    private val getCharacterUseCase: GetCharacterUseCase
 ) : BaseViewModel<CurrencyContract.State, CurrencyContract.Event, CurrencyContract.Effect>() {
 
     init {
@@ -27,9 +24,7 @@ class CurrencyViewModel @Inject constructor(
     override fun handleEvent(event: CurrencyContract.Event) {}
 
     private suspend fun getCharacter() {
-        // TODO: Move into UseCase?
-        val characterId = preferenceRepository.getLastCharacterId().first()
-        when (val result = characterRepository.getCharacter(characterId)) {
+        when (val result = getCharacterUseCase.execute()) {
             is ApiResult.Success -> {
                 updateState {
                     CurrencyContract.State.CurrencyInfo(result.value.currency)
