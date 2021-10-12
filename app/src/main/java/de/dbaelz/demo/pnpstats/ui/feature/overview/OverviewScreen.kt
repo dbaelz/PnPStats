@@ -1,12 +1,16 @@
 package de.dbaelz.demo.pnpstats.ui.feature.overview
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import de.dbaelz.demo.pnpstats.ui.feature.LAUNCHED_EFFECT_KEY
 import de.dbaelz.demo.pnpstats.ui.feature.common.LoadingIndicator
@@ -42,18 +46,41 @@ fun OverviewScreen(
 @Composable
 private fun CharacterInfo(character: de.dbaelz.demo.pnpstats.data.character.Character) {
     // TODO: Only dummy UI
-    Column(
+    Card(
+        elevation = 12.dp,
         modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
+            .fillMaxWidth()
+            .padding(16.dp)
     ) {
-        Text(text = "Overview screen", style = MaterialTheme.typography.h3)
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(8.dp)
+        ) {
+            Text(
+                text = character.name,
+                style = MaterialTheme.typography.h4,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.fillMaxWidth()
+            )
 
-        Text(
-            text = "Character Name: ${character.name}",
-            modifier = Modifier.fillMaxWidth()
-        )
+            Text(
+                text = character.experience.toString(),
+                style = MaterialTheme.typography.h5,
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Text(
+                text = character.currency.toString(),
+                style = MaterialTheme.typography.h5,
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Text(
+                text = character.notes,
+                style = MaterialTheme.typography.h5,
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
     }
 }
