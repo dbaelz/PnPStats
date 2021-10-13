@@ -47,7 +47,12 @@ class MainActivity : ComponentActivity() {
 
                 Scaffold(
                     topBar = {
-                        TopBar(navController, currentScreen.displayName)
+                        val showCharactersAction =
+                            currentScreen != Screen.CHARACTERS && currentScreen != Screen.CREATE_CHARACTER
+
+                        TopBar(currentScreen.displayName, showCharactersAction) {
+                            navController.navigate(Screen.CHARACTERS.route)
+                        }
                     },
                     floatingActionButton = {
                         CreateCharacterActionButton(currentScreen) {
@@ -76,13 +81,21 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-private fun TopBar(navController: NavHostController, title: String) {
+private fun TopBar(
+    title: String,
+    withCharactersAction: Boolean,
+    onActionButtonClicked: () -> Unit
+) {
     TopAppBar(
         title = { Text(title) },
-        actions = {
-            IconButton(onClick = { navController.navigate(Screen.CHARACTERS.route) }) {
-                Icon(Screen.CHARACTERS.icon, null)
+        actions = if (withCharactersAction) {
+            {
+                IconButton(onClick = onActionButtonClicked) {
+                    Icon(Screen.CHARACTERS.icon, null)
+                }
             }
+        } else {
+            {}
         }
     )
 }
