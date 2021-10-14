@@ -2,6 +2,9 @@ package de.dbaelz.demo.pnpstats.ui.feature.characters
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -42,19 +45,63 @@ fun CharactersScreen(
 
 
 @Composable
-fun CharactersList(characters: List<Character>, onCharacterSelected: (Int) -> Unit) {
+private fun CharactersList(characters: List<Character>, onCharacterSelected: (Int) -> Unit) {
     // TODO: Only dummy UI
     Column(
         modifier = Modifier
+            .verticalScroll(rememberScrollState())
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Text(text = "Characters", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.h3)
-
         characters.forEach {
-            Text(text = it.name, modifier = Modifier.clickable { onCharacterSelected(it.id) })
+            CharacterListCard(it, onCharacterSelected)
 
-            Spacer(Modifier.height(16.dp))
+            Spacer(Modifier.height(8.dp))
         }
     }
+}
+
+@Composable
+private fun CharacterListCard(character: Character, onCharacterSelected: (Int) -> Unit) {
+    Card(
+        elevation = 12.dp,
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .clickable { onCharacterSelected(character.id) }
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
+        ) {
+            Text(
+                text = character.name,
+                style = MaterialTheme.typography.h4,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Text(
+                text = "${character.experience} XP",
+                style = MaterialTheme.typography.h6
+            )
+
+            Row {
+                Currency("pp", character.currency.platinum)
+                Currency("gp", character.currency.gold)
+                Currency("sp", character.currency.silver)
+                Currency("cp", character.currency.copper, false)
+            }
+        }
+    }
+}
+
+@Composable
+private fun Currency(coinName: String, value: Int, withDelimiter: Boolean = true) {
+    Text(
+        text = "$value $coinName${if (withDelimiter) " • " else ""}",
+        style = MaterialTheme.typography.h6,
+        modifier = Modifier.padding(end = 8.dp)
+    )
 }
