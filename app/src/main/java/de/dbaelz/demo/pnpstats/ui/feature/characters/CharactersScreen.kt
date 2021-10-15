@@ -2,13 +2,10 @@ package de.dbaelz.demo.pnpstats.ui.feature.characters
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Card
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -36,27 +33,52 @@ fun CharactersScreen(
 
     when (state) {
         CharactersContract.State.Loading -> LoadingIndicator()
-        is CharactersContract.State.Characters -> CharactersList(state.characters) {
-            onEvent(CharactersContract.Event.CharacterSelected(it))
-        }
+        is CharactersContract.State.Characters -> CharactersList(
+            characters = state.characters,
+            onCharacterSelected = {
+                onEvent(CharactersContract.Event.CharacterSelected(it))
+            },
+            onCharacterDeleted = {
+                onEvent(CharactersContract.Event.CharacterDeleted(it))
+            })
     }
-
 }
 
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
-private fun CharactersList(characters: List<Character>, onCharacterSelected: (Int) -> Unit) {
+private fun CharactersList(
+    characters: List<Character>,
+    onCharacterSelected: (Int) -> Unit,
+    onCharacterDeleted: (Int) -> Unit
+) {
     // TODO: Only dummy UI
-    Column(
+    LazyColumn(
         modifier = Modifier
-            .verticalScroll(rememberScrollState())
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        characters.forEach {
-            CharacterListCard(it, onCharacterSelected)
+        items(
+            items = characters,
+            key = { character -> character.id }
+        ) { item ->
+            val dismissState = rememberDismissState {
+                if (it == DismissValue.DismissedToStart) {
+                    onCharacterDeleted(item.id)
+                }
+                it != DismissValue.DismissedToStart
+            }
 
-            Spacer(Modifier.height(8.dp))
+            SwipeToDismiss(
+                modifier = Modifier.padding(vertical = 8.dp),
+                state = dismissState,
+                directions = setOf(DismissDirection.EndToStart),
+                background = {
+
+                },
+                dismissContent = {
+                    CharacterListCard(item, onCharacterSelected)
+                })
         }
     }
 }

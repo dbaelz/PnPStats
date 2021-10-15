@@ -1,6 +1,9 @@
 package de.dbaelz.demo.pnpstats.data.character
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
 
 @Dao
 interface CharacterDao {
@@ -13,6 +16,6 @@ interface CharacterDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(vararg character: CharacterEntity)
 
-    @Delete
-    fun delete(characterEntity: CharacterEntity)
+    @Query("DELETE FROM CharacterEntity WHERE id = :id")
+    fun delete(id: Int)
 }

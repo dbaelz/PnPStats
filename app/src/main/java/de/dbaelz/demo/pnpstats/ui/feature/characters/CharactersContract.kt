@@ -14,6 +14,7 @@ class CharactersContract {
 
     sealed class Event : ViewEvent {
         data class CharacterSelected(val id: Int) : Event()
+        data class CharacterDeleted(val id: Int) : Event()
     }
 
     sealed class Effect : ViewSideEffect {

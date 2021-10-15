@@ -43,6 +43,12 @@ class CharacterRepository @Inject constructor(private val characterDao: Characte
         }
     }
 
+    suspend fun deleteCharacter(characterId: Int) {
+        withContext(Dispatchers.IO) {
+            characterDao.delete(characterId)
+        }
+    }
+
     private fun CharacterEntity.toCharacter(): Character {
         return Character(
             id,

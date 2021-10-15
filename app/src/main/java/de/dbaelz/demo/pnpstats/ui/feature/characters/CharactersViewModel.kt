@@ -16,10 +16,7 @@ class CharactersViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            val characters = characterRepository.getCharacters()
-            updateState {
-                CharactersContract.State.Characters(characters)
-            }
+            getCharacters()
         }
     }
 
@@ -34,6 +31,20 @@ class CharactersViewModel @Inject constructor(
                     setEffect { CharactersContract.Effect.Navigation.ToOverview(event.id) }
                 }
             }
+            is CharactersContract.Event.CharacterDeleted -> {
+                viewModelScope.launch {
+                    characterRepository.deleteCharacter(event.id)
+
+                    getCharacters()
+                }
+            }
+        }
+    }
+
+    private suspend fun getCharacters() {
+        val characters = characterRepository.getCharacters()
+        updateState {
+            CharactersContract.State.Characters(characters)
         }
     }
 }
