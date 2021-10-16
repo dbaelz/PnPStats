@@ -85,8 +85,8 @@ private fun CharactersList(
                         contentAlignment = Alignment.CenterEnd,
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(start = 24.dp)
-                            .background(Color.Red, RoundedCornerShape(16.dp))
+                            .padding(start = 24.dp, end = 4.dp)
+                            .background(Color.Red, RoundedCornerShape(8.dp))
                     ) {
                         Icon(
                             imageVector = Icons.Default.Delete,
