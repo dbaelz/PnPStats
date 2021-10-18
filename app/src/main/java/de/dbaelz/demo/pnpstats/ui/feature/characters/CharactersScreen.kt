@@ -131,21 +131,14 @@ private fun CharacterListCard(character: Character, onCharacterSelected: (Int) -
                 style = MaterialTheme.typography.h6
             )
 
-            Row {
-                Currency("pp", character.currency.platinum)
-                Currency("gp", character.currency.gold)
-                Currency("sp", character.currency.silver)
-                Currency("cp", character.currency.copper, false)
-            }
+            Text(
+                text = "${character.currency.platinum} pp  • " +
+                        "${character.currency.gold} gp • " +
+                        "${character.currency.silver} sp  • " +
+                        "${character.currency.copper} cp",
+                style = MaterialTheme.typography.h6,
+                modifier = Modifier.padding(end = 8.dp)
+            )
         }
     }
-}
-
-@Composable
-private fun Currency(coinName: String, value: Int, withDelimiter: Boolean = true) {
-    Text(
-        text = "$value $coinName${if (withDelimiter) " • " else ""}",
-        style = MaterialTheme.typography.h6,
-        modifier = Modifier.padding(end = 8.dp)
-    )
 }
