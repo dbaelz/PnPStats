@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import de.dbaelz.demo.pnpstats.data.character.Character
+import de.dbaelz.demo.pnpstats.data.character.toFormattedString
 import de.dbaelz.demo.pnpstats.ui.feature.LAUNCHED_EFFECT_KEY
 import de.dbaelz.demo.pnpstats.ui.feature.common.LoadingIndicator
 import kotlinx.coroutines.flow.Flow
@@ -65,10 +66,7 @@ private fun CurrencyInfo(currency: Character.Currency) {
         Spacer(Modifier.height(4.dp))
 
         Text(
-            text = "${currency.platinum} pp  • " +
-                    "${currency.gold} gp • " +
-                    "${currency.silver} sp  • " +
-                    "${currency.copper} cp",
+            text = currency.toFormattedString(),
             style = MaterialTheme.typography.h5,
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth()

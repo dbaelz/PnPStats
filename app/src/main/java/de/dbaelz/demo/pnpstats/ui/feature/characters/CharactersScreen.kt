@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import de.dbaelz.demo.pnpstats.data.character.Character
+import de.dbaelz.demo.pnpstats.data.character.toFormattedString
 import de.dbaelz.demo.pnpstats.ui.feature.LAUNCHED_EFFECT_KEY
 import de.dbaelz.demo.pnpstats.ui.feature.common.LoadingIndicator
 import kotlinx.coroutines.flow.Flow
@@ -132,10 +133,7 @@ private fun CharacterListCard(character: Character, onCharacterSelected: (Int) -
             )
 
             Text(
-                text = "${character.currency.platinum} pp  • " +
-                        "${character.currency.gold} gp • " +
-                        "${character.currency.silver} sp  • " +
-                        "${character.currency.copper} cp",
+                text = character.currency.toFormattedString(),
                 style = MaterialTheme.typography.h6,
                 modifier = Modifier.padding(end = 8.dp)
             )

@@ -88,3 +88,7 @@ data class Character(
         val copper: Int = 0
     )
 }
+
+fun Character.Currency.toFormattedString(): String {
+    return "$platinum pp  • $gold gp • $silver sp  • $copper cp"
+}

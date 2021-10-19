@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import de.dbaelz.demo.pnpstats.data.character.toFormattedString
 import de.dbaelz.demo.pnpstats.ui.feature.LAUNCHED_EFFECT_KEY
 import de.dbaelz.demo.pnpstats.ui.feature.common.LoadingIndicator
 import kotlinx.coroutines.flow.Flow
@@ -78,10 +79,7 @@ private fun CharacterInfo(character: de.dbaelz.demo.pnpstats.data.character.Char
 
             CharacterDetail(
                 Icons.Default.AccountBox,
-                "${character.currency.platinum} pp  • " +
-                        "${character.currency.gold} gp • " +
-                        "${character.currency.silver} sp  • " +
-                        "${character.currency.copper} cp"
+                character.currency.toFormattedString()
             )
 
             Spacer(Modifier.height(24.dp))
