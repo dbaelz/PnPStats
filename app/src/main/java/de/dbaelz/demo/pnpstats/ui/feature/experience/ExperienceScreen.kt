@@ -1,12 +1,16 @@
 package de.dbaelz.demo.pnpstats.ui.feature.experience
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import de.dbaelz.demo.pnpstats.ui.feature.LAUNCHED_EFFECT_KEY
 import de.dbaelz.demo.pnpstats.ui.feature.common.LoadingIndicator
@@ -49,15 +53,20 @@ private fun ExperienceInfo(experience: Int) {
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Text(
-            text = "Experience",
-            style = MaterialTheme.typography.h3,
-            modifier = Modifier.fillMaxWidth()
+        val icon = Icons.Default.Info
+        Icon(
+            imageVector = icon,
+            contentDescription = icon.name,
+            tint = MaterialTheme.colors.primary,
+            modifier = Modifier.size(48.dp)
         )
 
+        Spacer(Modifier.height(4.dp))
+
         Text(
-            text = experience.toString(),
-            style = MaterialTheme.typography.h4,
+            text = "$experience XP",
+            style = MaterialTheme.typography.h5,
+            textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth()
         )
     }

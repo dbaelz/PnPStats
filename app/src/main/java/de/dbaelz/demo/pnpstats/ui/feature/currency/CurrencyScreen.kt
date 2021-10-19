@@ -1,12 +1,16 @@
 package de.dbaelz.demo.pnpstats.ui.feature.currency
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import de.dbaelz.demo.pnpstats.data.character.Character
 import de.dbaelz.demo.pnpstats.ui.feature.LAUNCHED_EFFECT_KEY
@@ -50,9 +54,23 @@ private fun CurrencyInfo(currency: Character.Currency) {
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
+        val icon = Icons.Default.AccountBox
+        Icon(
+            imageVector = icon,
+            contentDescription = icon.name,
+            tint = MaterialTheme.colors.primary,
+            modifier = Modifier.size(48.dp)
+        )
+
+        Spacer(Modifier.height(4.dp))
+
         Text(
-            text = currency.toString(),
-            style = MaterialTheme.typography.h4,
+            text = "${currency.platinum} pp  • " +
+                    "${currency.gold} gp • " +
+                    "${currency.silver} sp  • " +
+                    "${currency.copper} cp",
+            style = MaterialTheme.typography.h5,
+            textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth()
         )
     }
