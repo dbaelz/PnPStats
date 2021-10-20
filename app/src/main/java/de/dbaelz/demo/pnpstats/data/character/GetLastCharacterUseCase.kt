@@ -7,7 +7,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class GetCharacterUseCase @Inject constructor(
+class GetLastCharacterUseCase @Inject constructor(
     private val preferenceRepository: PreferenceRepository,
     private val characterRepository: CharacterRepository
 ) {
