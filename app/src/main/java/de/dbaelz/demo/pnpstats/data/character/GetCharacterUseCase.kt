@@ -11,7 +11,7 @@ class GetCharacterUseCase @Inject constructor(
     private val preferenceRepository: PreferenceRepository,
     private val characterRepository: CharacterRepository
 ) {
-    suspend fun execute(): ApiResult<Character> {
+    suspend operator fun invoke(): ApiResult<Character> {
         val characterId = preferenceRepository.getLastCharacterId().first()
         return characterRepository.getCharacter(characterId)
     }

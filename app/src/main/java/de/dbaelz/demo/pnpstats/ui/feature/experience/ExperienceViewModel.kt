@@ -10,30 +10,26 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ExperienceViewModel @Inject constructor(
-    private val getCharacterUseCase: GetCharacterUseCase
+    private val getCharacter: GetCharacterUseCase
 ) : BaseViewModel<ExperienceContract.State, ExperienceContract.Event, ExperienceContract.Effect>() {
 
     init {
         viewModelScope.launch {
-            getCharacter()
+            when (val result = getCharacter()) {
+                is ApiResult.Success -> {
+                    updateState {
+                        ExperienceContract.State.ExperienceInfo(result.value.experience)
+                    }
+                }
+                is ApiResult.Error -> {
+                    setEffect { ExperienceContract.Effect.ErrorLoadingCharacter }
+                    setEffect { ExperienceContract.Effect.Navigation.ToCharacters }
+                }
+            }
         }
     }
 
     override fun provideInitialState() = ExperienceContract.State.Loading
 
     override fun handleEvent(event: ExperienceContract.Event) {}
-
-    private suspend fun getCharacter() {
-        when (val result = getCharacterUseCase.execute()) {
-            is ApiResult.Success -> {
-                updateState {
-                    ExperienceContract.State.ExperienceInfo(result.value.experience)
-                }
-            }
-            is ApiResult.Error -> {
-                setEffect { ExperienceContract.Effect.ErrorLoadingCharacter }
-                setEffect { ExperienceContract.Effect.Navigation.ToCharacters }
-            }
-        }
-    }
 }

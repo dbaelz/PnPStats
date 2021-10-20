@@ -10,30 +10,26 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CurrencyViewModel @Inject constructor(
-    private val getCharacterUseCase: GetCharacterUseCase
+    private val getCharacter: GetCharacterUseCase
 ) : BaseViewModel<CurrencyContract.State, CurrencyContract.Event, CurrencyContract.Effect>() {
 
     init {
         viewModelScope.launch {
-            getCharacter()
+            when (val result = getCharacter()) {
+                is ApiResult.Success -> {
+                    updateState {
+                        CurrencyContract.State.CurrencyInfo(result.value.currency)
+                    }
+                }
+                is ApiResult.Error -> {
+                    setEffect { CurrencyContract.Effect.ErrorLoadingCharacter }
+                    setEffect { CurrencyContract.Effect.Navigation.ToCharacters }
+                }
+            }
         }
     }
 
     override fun provideInitialState() = CurrencyContract.State.Loading
 
     override fun handleEvent(event: CurrencyContract.Event) {}
-
-    private suspend fun getCharacter() {
-        when (val result = getCharacterUseCase.execute()) {
-            is ApiResult.Success -> {
-                updateState {
-                    CurrencyContract.State.CurrencyInfo(result.value.currency)
-                }
-            }
-            is ApiResult.Error -> {
-                setEffect { CurrencyContract.Effect.ErrorLoadingCharacter }
-                setEffect { CurrencyContract.Effect.Navigation.ToCharacters }
-            }
-        }
-    }
 }
