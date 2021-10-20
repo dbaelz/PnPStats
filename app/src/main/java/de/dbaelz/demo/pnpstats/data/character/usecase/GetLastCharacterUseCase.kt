@@ -1,6 +1,8 @@
-package de.dbaelz.demo.pnpstats.data.character
+package de.dbaelz.demo.pnpstats.data.character.usecase
 
 import de.dbaelz.demo.pnpstats.data.PreferenceRepository
+import de.dbaelz.demo.pnpstats.data.character.Character
+import de.dbaelz.demo.pnpstats.data.character.CharacterRepository
 import de.dbaelz.demo.pnpstats.data.common.ApiResult
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject

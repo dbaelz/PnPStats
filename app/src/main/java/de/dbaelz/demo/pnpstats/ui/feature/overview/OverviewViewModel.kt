@@ -2,7 +2,7 @@ package de.dbaelz.demo.pnpstats.ui.feature.overview
 
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import de.dbaelz.demo.pnpstats.data.character.GetLastCharacterUseCase
+import de.dbaelz.demo.pnpstats.data.character.usecase.GetLastCharacterUseCase
 import de.dbaelz.demo.pnpstats.data.common.ApiResult
 import de.dbaelz.demo.pnpstats.ui.feature.BaseViewModel
 import kotlinx.coroutines.launch
