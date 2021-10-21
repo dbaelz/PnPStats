@@ -31,5 +31,14 @@ class ExperienceViewModel @Inject constructor(
 
     override fun provideInitialState() = ExperienceContract.State.Loading
 
-    override fun handleEvent(event: ExperienceContract.Event) {}
+    override fun handleEvent(event: ExperienceContract.Event) {
+        if (event is ExperienceContract.Event.ExperienceAdded) {
+            viewModelScope.launch {
+                // TODO: Persist the value and update the state afterwards
+                updateState {
+                    ExperienceContract.State.ExperienceInfo(event.value)
+                }
+            }
+        }
+    }
 }

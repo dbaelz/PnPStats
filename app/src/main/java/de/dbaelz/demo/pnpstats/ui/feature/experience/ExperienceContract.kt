@@ -10,7 +10,9 @@ class ExperienceContract {
         data class ExperienceInfo(val experience: Int) : State()
     }
 
-    object Event : ViewEvent
+    sealed class Event : ViewEvent {
+        data class ExperienceAdded(val value: Int) : Event()
+    }
 
     sealed class Effect : ViewSideEffect {
         object ErrorLoadingCharacter : Effect()

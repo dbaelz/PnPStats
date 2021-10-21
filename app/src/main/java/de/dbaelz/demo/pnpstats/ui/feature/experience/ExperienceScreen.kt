@@ -1,17 +1,20 @@
 package de.dbaelz.demo.pnpstats.ui.feature.experience
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import de.dbaelz.demo.pnpstats.ui.feature.LAUNCHED_EFFECT_KEY
 import de.dbaelz.demo.pnpstats.ui.feature.common.LoadingIndicator
 import kotlinx.coroutines.flow.Flow
@@ -39,13 +42,31 @@ fun ExperienceScreen(
 
     when (state) {
         ExperienceContract.State.Loading -> LoadingIndicator()
-        is ExperienceContract.State.ExperienceInfo -> ExperienceInfo(state.experience)
+        is ExperienceContract.State.ExperienceInfo -> {
+            var errorState by remember { mutableStateOf(false) }
+
+            ExperienceInfo(state.experience, errorState) {
+                val value = it.toIntOrNull()
+
+                if (value == null || value < 0) {
+                    errorState = true
+                } else {
+                    errorState = false
+                    onEvent(ExperienceContract.Event.ExperienceAdded(value))
+                }
+            }
+        }
     }
 }
 
 @Composable
-private fun ExperienceInfo(experience: Int) {
-    // TODO: Only dummy UI
+private fun ExperienceInfo(
+    experience: Int,
+    isError: Boolean,
+    onExperienceAdded: (value: String) -> Unit
+) {
+    var textFieldValue by remember { mutableStateOf(TextFieldValue()) }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -53,21 +74,44 @@ private fun ExperienceInfo(experience: Int) {
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        val icon = Icons.Default.Info
-        Icon(
-            imageVector = icon,
-            contentDescription = icon.name,
-            tint = MaterialTheme.colors.primary,
-            modifier = Modifier.size(48.dp)
-        )
-
-        Spacer(Modifier.height(4.dp))
-
         Text(
             text = "$experience XP",
-            style = MaterialTheme.typography.h5,
+            fontSize = 40.sp,
             textAlign = TextAlign.Center,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .border(8.dp, MaterialTheme.colors.primary, RoundedCornerShape(16.dp))
+                .padding(32.dp)
         )
+
+        Spacer(Modifier.height(24.dp))
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(TextFieldDefaults.MinHeight)
+        ) {
+            OutlinedTextField(
+                value = textFieldValue,
+                onValueChange = { textFieldValue = it },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                isError = isError,
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .weight(1f)
+            )
+
+            Spacer(Modifier.width(8.dp))
+
+            Button(
+                onClick = {
+                    onExperienceAdded(textFieldValue.text)
+                },
+                modifier = Modifier.fillMaxHeight()
+            ) {
+                Icon(Icons.Default.AddCircle, Icons.Default.AddCircle.name)
+            }
+        }
+
     }
 }
