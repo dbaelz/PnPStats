@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import de.dbaelz.demo.pnpstats.data.character.Character
 import de.dbaelz.demo.pnpstats.data.character.toFormattedString
 import de.dbaelz.demo.pnpstats.ui.feature.LAUNCHED_EFFECT_KEY
+import de.dbaelz.demo.pnpstats.ui.feature.characters.CharactersContract.*
 import de.dbaelz.demo.pnpstats.ui.feature.common.LoadingIndicator
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
@@ -26,28 +27,28 @@ import kotlinx.coroutines.flow.onEach
 
 @Composable
 fun CharactersScreen(
-    state: CharactersContract.State,
-    effectFlow: Flow<CharactersContract.Effect>?,
-    onEvent: (event: CharactersContract.Event) -> Unit,
-    onNavigation: (navigationEffect: CharactersContract.Effect.Navigation) -> Unit
+    state: State,
+    effectFlow: Flow<Effect>?,
+    onEvent: (event: Event) -> Unit,
+    onNavigation: (navigationEffect: Effect.Navigation) -> Unit
 ) {
     LaunchedEffect(LAUNCHED_EFFECT_KEY) {
         effectFlow?.onEach { effect ->
-            if (effect is CharactersContract.Effect.Navigation) {
+            if (effect is Effect.Navigation) {
                 onNavigation(effect)
             }
         }?.collect()
     }
 
     when (state) {
-        CharactersContract.State.Loading -> LoadingIndicator()
-        is CharactersContract.State.Characters -> CharactersList(
+        State.Loading -> LoadingIndicator()
+        is State.Characters -> CharactersList(
             characters = state.characters,
             onCharacterSelected = {
-                onEvent(CharactersContract.Event.CharacterSelected(it))
+                onEvent(Event.CharacterSelected(it))
             },
             onCharacterDeleted = {
-                onEvent(CharactersContract.Event.CharacterDeleted(it))
+                onEvent(Event.CharacterDeleted(it))
             })
     }
 }

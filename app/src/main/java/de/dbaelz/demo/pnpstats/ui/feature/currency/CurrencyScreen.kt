@@ -16,32 +16,33 @@ import de.dbaelz.demo.pnpstats.data.character.Character
 import de.dbaelz.demo.pnpstats.data.character.toFormattedString
 import de.dbaelz.demo.pnpstats.ui.feature.LAUNCHED_EFFECT_KEY
 import de.dbaelz.demo.pnpstats.ui.feature.common.LoadingIndicator
+import de.dbaelz.demo.pnpstats.ui.feature.currency.CurrencyContract.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 
 @Composable
 fun CurrencyScreen(
-    state: CurrencyContract.State,
-    effectFlow: Flow<CurrencyContract.Effect>?,
-    onEvent: (event: CurrencyContract.Event) -> Unit,
-    onNavigation: (navigationEffect: CurrencyContract.Effect.Navigation) -> Unit
+    state: State,
+    effectFlow: Flow<Effect>?,
+    onEvent: (event: Event) -> Unit,
+    onNavigation: (navigationEffect: Effect.Navigation) -> Unit
 ) {
     LaunchedEffect(LAUNCHED_EFFECT_KEY) {
         effectFlow?.onEach { effect ->
-            if (effect is CurrencyContract.Effect.Navigation) {
+            if (effect is Effect.Navigation) {
                 onNavigation(effect)
             }
 
-            if (effect is CurrencyContract.Effect.ErrorLoadingCharacter) {
+            if (effect is Effect.ErrorLoadingCharacter) {
                 // TODO: Show snackbar or a different indicator
             }
         }?.collect()
     }
 
     when (state) {
-        CurrencyContract.State.Loading -> LoadingIndicator()
-        is CurrencyContract.State.CurrencyInfo -> CurrencyInfo(state.currency)
+        State.Loading -> LoadingIndicator()
+        is State.CurrencyInfo -> CurrencyInfo(state.currency)
     }
 }
 

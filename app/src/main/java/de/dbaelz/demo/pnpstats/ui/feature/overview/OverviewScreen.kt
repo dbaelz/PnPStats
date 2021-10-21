@@ -20,32 +20,33 @@ import androidx.compose.ui.unit.dp
 import de.dbaelz.demo.pnpstats.data.character.toFormattedString
 import de.dbaelz.demo.pnpstats.ui.feature.LAUNCHED_EFFECT_KEY
 import de.dbaelz.demo.pnpstats.ui.feature.common.LoadingIndicator
+import de.dbaelz.demo.pnpstats.ui.feature.overview.OverviewContract.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 
 @Composable
 fun OverviewScreen(
-    state: OverviewContract.State,
-    effectFlow: Flow<OverviewContract.Effect>?,
-    onEvent: (event: OverviewContract.Event) -> Unit,
-    onNavigation: (navigationEffect: OverviewContract.Effect.Navigation) -> Unit
+    state: State,
+    effectFlow: Flow<Effect>?,
+    onEvent: (event: Event) -> Unit,
+    onNavigation: (navigationEffect: Effect.Navigation) -> Unit
 ) {
     LaunchedEffect(LAUNCHED_EFFECT_KEY) {
         effectFlow?.onEach { effect ->
-            if (effect is OverviewContract.Effect.Navigation) {
+            if (effect is Effect.Navigation) {
                 onNavigation(effect)
             }
 
-            if (effect is OverviewContract.Effect.ErrorLoadingCharacter) {
+            if (effect is Effect.ErrorLoadingCharacter) {
                 // TODO: Show snackbar or a different indicator
             }
         }?.collect()
     }
 
     when (state) {
-        OverviewContract.State.Loading -> LoadingIndicator()
-        is OverviewContract.State.CharacterInfo -> CharacterInfo(state.character)
+        State.Loading -> LoadingIndicator()
+        is State.CharacterInfo -> CharacterInfo(state.character)
     }
 }
 

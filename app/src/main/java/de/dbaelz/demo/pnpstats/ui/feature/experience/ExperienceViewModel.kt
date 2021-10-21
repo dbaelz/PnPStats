@@ -5,38 +5,39 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import de.dbaelz.demo.pnpstats.data.character.usecase.GetLastCharacterUseCase
 import de.dbaelz.demo.pnpstats.data.common.ApiResult
 import de.dbaelz.demo.pnpstats.ui.feature.BaseViewModel
+import de.dbaelz.demo.pnpstats.ui.feature.experience.ExperienceContract.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ExperienceViewModel @Inject constructor(
     private val getLastCharacter: GetLastCharacterUseCase
-) : BaseViewModel<ExperienceContract.State, ExperienceContract.Event, ExperienceContract.Effect>() {
+) : BaseViewModel<State, Event, Effect>() {
 
     init {
         viewModelScope.launch {
             when (val result = getLastCharacter()) {
                 is ApiResult.Success -> {
                     updateState {
-                        ExperienceContract.State.ExperienceInfo(result.value.experience)
+                        State.ExperienceInfo(result.value.experience)
                     }
                 }
                 is ApiResult.Error -> {
-                    setEffect { ExperienceContract.Effect.ErrorLoadingCharacter }
-                    setEffect { ExperienceContract.Effect.Navigation.ToCharacters }
+                    setEffect { Effect.ErrorLoadingCharacter }
+                    setEffect { Effect.Navigation.ToCharacters }
                 }
             }
         }
     }
 
-    override fun provideInitialState() = ExperienceContract.State.Loading
+    override fun provideInitialState() = State.Loading
 
-    override fun handleEvent(event: ExperienceContract.Event) {
-        if (event is ExperienceContract.Event.ExperienceAdded) {
+    override fun handleEvent(event: Event) {
+        if (event is Event.ExperienceAdded) {
             viewModelScope.launch {
                 // TODO: Persist the value and update the state afterwards
                 updateState {
-                    ExperienceContract.State.ExperienceInfo(event.value)
+                    State.ExperienceInfo(event.value)
                 }
             }
         }

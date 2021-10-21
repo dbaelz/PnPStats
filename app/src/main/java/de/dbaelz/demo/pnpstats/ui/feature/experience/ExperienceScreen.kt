@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import de.dbaelz.demo.pnpstats.ui.feature.LAUNCHED_EFFECT_KEY
 import de.dbaelz.demo.pnpstats.ui.feature.common.LoadingIndicator
+import de.dbaelz.demo.pnpstats.ui.feature.experience.ExperienceContract.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
@@ -24,17 +25,17 @@ import kotlinx.coroutines.flow.onEach
 @Composable
 fun ExperienceScreen(
     state: ExperienceContract.State,
-    effectFlow: Flow<ExperienceContract.Effect>?,
-    onEvent: (event: ExperienceContract.Event) -> Unit,
-    onNavigation: (navigationEffect: ExperienceContract.Effect.Navigation) -> Unit
+    effectFlow: Flow<Effect>?,
+    onEvent: (event: Event) -> Unit,
+    onNavigation: (navigationEffect: Effect.Navigation) -> Unit
 ) {
     LaunchedEffect(LAUNCHED_EFFECT_KEY) {
         effectFlow?.onEach { effect ->
-            if (effect is ExperienceContract.Effect.Navigation) {
+            if (effect is Effect.Navigation) {
                 onNavigation(effect)
             }
 
-            if (effect is ExperienceContract.Effect.ErrorLoadingCharacter) {
+            if (effect is Effect.ErrorLoadingCharacter) {
                 // TODO: Show snackbar or a different indicator
             }
         }?.collect()
@@ -52,7 +53,7 @@ fun ExperienceScreen(
                     errorState = true
                 } else {
                     errorState = false
-                    onEvent(ExperienceContract.Event.ExperienceAdded(value))
+                    onEvent(Event.ExperienceAdded(value))
                 }
             }
         }

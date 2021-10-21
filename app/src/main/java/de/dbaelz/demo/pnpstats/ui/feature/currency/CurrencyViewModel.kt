@@ -5,31 +5,32 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import de.dbaelz.demo.pnpstats.data.character.usecase.GetLastCharacterUseCase
 import de.dbaelz.demo.pnpstats.data.common.ApiResult
 import de.dbaelz.demo.pnpstats.ui.feature.BaseViewModel
+import de.dbaelz.demo.pnpstats.ui.feature.currency.CurrencyContract.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class CurrencyViewModel @Inject constructor(
     private val getLastCharacter: GetLastCharacterUseCase
-) : BaseViewModel<CurrencyContract.State, CurrencyContract.Event, CurrencyContract.Effect>() {
+) : BaseViewModel<State, Event, Effect>() {
 
     init {
         viewModelScope.launch {
             when (val result = getLastCharacter()) {
                 is ApiResult.Success -> {
                     updateState {
-                        CurrencyContract.State.CurrencyInfo(result.value.currency)
+                        State.CurrencyInfo(result.value.currency)
                     }
                 }
                 is ApiResult.Error -> {
-                    setEffect { CurrencyContract.Effect.ErrorLoadingCharacter }
-                    setEffect { CurrencyContract.Effect.Navigation.ToCharacters }
+                    setEffect { Effect.ErrorLoadingCharacter }
+                    setEffect { Effect.Navigation.ToCharacters }
                 }
             }
         }
     }
 
-    override fun provideInitialState() = CurrencyContract.State.Loading
+    override fun provideInitialState() = State.Loading
 
-    override fun handleEvent(event: CurrencyContract.Event) {}
+    override fun handleEvent(event: Event) {}
 }

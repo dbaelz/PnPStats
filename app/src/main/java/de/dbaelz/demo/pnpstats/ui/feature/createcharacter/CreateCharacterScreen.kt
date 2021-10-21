@@ -11,15 +11,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
 import de.dbaelz.demo.pnpstats.ui.feature.LAUNCHED_EFFECT_KEY
+import de.dbaelz.demo.pnpstats.ui.feature.createcharacter.CreateCharacterContract.Event
+import de.dbaelz.demo.pnpstats.ui.feature.createcharacter.CreateCharacterContract.NavigateToCharactersEffect
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 
 @Composable
 fun CreateCharacterScreen(
-    effectFlow: Flow<CreateCharacterContract.NavigateToCharactersEffect>?,
-    onEvent: (event: CreateCharacterContract.Event) -> Unit,
-    onNavigation: (navigationEffect: CreateCharacterContract.NavigateToCharactersEffect) -> Unit
+    effectFlow: Flow<NavigateToCharactersEffect>?,
+    onEvent: (event: Event) -> Unit,
+    onNavigation: (navigationEffect: NavigateToCharactersEffect) -> Unit
 ) {
     LaunchedEffect(LAUNCHED_EFFECT_KEY) {
         effectFlow?.onEach {
@@ -38,7 +40,7 @@ fun CreateCharacterScreen(
         TextField(value = textFieldValue, onValueChange = { textFieldValue = it })
 
         Button(onClick = {
-            onEvent(CreateCharacterContract.Event.CreateCharacter(textFieldValue.text))
+            onEvent(Event.CreateCharacter(textFieldValue.text))
         }) {
             Text("Create Character")
         }

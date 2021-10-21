@@ -5,31 +5,32 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import de.dbaelz.demo.pnpstats.data.character.usecase.GetLastCharacterUseCase
 import de.dbaelz.demo.pnpstats.data.common.ApiResult
 import de.dbaelz.demo.pnpstats.ui.feature.BaseViewModel
+import de.dbaelz.demo.pnpstats.ui.feature.overview.OverviewContract.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class OverviewViewModel @Inject constructor(
     private val getLastCharacter: GetLastCharacterUseCase
-) : BaseViewModel<OverviewContract.State, OverviewContract.Event, OverviewContract.Effect>() {
+) : BaseViewModel<State, Event, Effect>() {
 
     init {
         viewModelScope.launch {
             when (val result = getLastCharacter()) {
                 is ApiResult.Success -> {
                     updateState {
-                        OverviewContract.State.CharacterInfo(result.value)
+                        State.CharacterInfo(result.value)
                     }
                 }
                 is ApiResult.Error -> {
-                    setEffect { OverviewContract.Effect.ErrorLoadingCharacter }
-                    setEffect { OverviewContract.Effect.Navigation.ToCharacters }
+                    setEffect { Effect.ErrorLoadingCharacter }
+                    setEffect { Effect.Navigation.ToCharacters }
                 }
             }
         }
     }
 
-    override fun provideInitialState() = OverviewContract.State.Loading
+    override fun provideInitialState() = State.Loading
 
-    override fun handleEvent(event: OverviewContract.Event) {}
+    override fun handleEvent(event: Event) {}
 }

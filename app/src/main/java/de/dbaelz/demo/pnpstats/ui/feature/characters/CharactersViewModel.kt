@@ -6,6 +6,7 @@ import de.dbaelz.demo.pnpstats.data.character.usecase.DeleteCharacterUseCase
 import de.dbaelz.demo.pnpstats.data.character.usecase.GetCharactersUseCase
 import de.dbaelz.demo.pnpstats.data.character.usecase.SetLastCharacterUseCase
 import de.dbaelz.demo.pnpstats.ui.feature.BaseViewModel
+import de.dbaelz.demo.pnpstats.ui.feature.characters.CharactersContract.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -14,7 +15,7 @@ class CharactersViewModel @Inject constructor(
     private val getCharacters: GetCharactersUseCase,
     private val setLastCharacter: SetLastCharacterUseCase,
     private val deleteCharacter: DeleteCharacterUseCase,
-) : BaseViewModel<CharactersContract.State, CharactersContract.Event, CharactersContract.Effect>() {
+) : BaseViewModel<State, Event, Effect>() {
 
     init {
         viewModelScope.launch {
@@ -22,18 +23,18 @@ class CharactersViewModel @Inject constructor(
         }
     }
 
-    override fun provideInitialState() = CharactersContract.State.Loading
+    override fun provideInitialState() = State.Loading
 
-    override fun handleEvent(event: CharactersContract.Event) {
+    override fun handleEvent(event: Event) {
         when (event) {
-            is CharactersContract.Event.CharacterSelected -> {
+            is Event.CharacterSelected -> {
                 viewModelScope.launch {
                     setLastCharacter(event.id)
 
-                    setEffect { CharactersContract.Effect.Navigation.ToOverview(event.id) }
+                    setEffect { Effect.Navigation.ToOverview(event.id) }
                 }
             }
-            is CharactersContract.Event.CharacterDeleted -> {
+            is Event.CharacterDeleted -> {
                 viewModelScope.launch {
                     deleteCharacter(event.id)
 
@@ -46,7 +47,7 @@ class CharactersViewModel @Inject constructor(
     private suspend fun updateCharacters() {
         val characters = getCharacters()
         updateState {
-            CharactersContract.State.Characters(characters)
+            State.Characters(characters)
         }
     }
 }
