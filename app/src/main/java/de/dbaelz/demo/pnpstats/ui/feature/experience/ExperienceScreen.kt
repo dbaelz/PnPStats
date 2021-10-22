@@ -17,7 +17,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import de.dbaelz.demo.pnpstats.ui.feature.LAUNCHED_EFFECT_KEY
 import de.dbaelz.demo.pnpstats.ui.feature.common.LoadingIndicator
-import de.dbaelz.demo.pnpstats.ui.feature.experience.ExperienceContract.*
+import de.dbaelz.demo.pnpstats.ui.feature.experience.ExperienceContract.Effect
+import de.dbaelz.demo.pnpstats.ui.feature.experience.ExperienceContract.Event
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
@@ -53,7 +54,7 @@ fun ExperienceScreen(
                     errorState = true
                 } else {
                     errorState = false
-                    onEvent(Event.ExperienceAdded(value))
+                    onEvent(Event.AddExperience(state.characterId, value))
                 }
             }
         }

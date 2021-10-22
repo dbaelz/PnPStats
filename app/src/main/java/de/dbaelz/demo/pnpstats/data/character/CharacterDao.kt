@@ -18,4 +18,7 @@ interface CharacterDao {
 
     @Query("DELETE FROM CharacterEntity WHERE id = :id")
     fun delete(id: Int)
+
+    @Query("UPDATE CharacterEntity SET experience = experience + :experience WHERE id = :characterId")
+    fun updateExperienceForCharacter(characterId: Int, experience: Int)
 }

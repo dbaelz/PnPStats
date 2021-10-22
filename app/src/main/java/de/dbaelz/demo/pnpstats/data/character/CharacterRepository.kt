@@ -49,6 +49,12 @@ class CharacterRepository @Inject constructor(private val characterDao: Characte
         }
     }
 
+    suspend fun updateCharacterExperience(characterId: Int, experience: Int) {
+        withContext(Dispatchers.IO) {
+            characterDao.updateExperienceForCharacter(characterId, experience)
+        }
+    }
+
     private fun CharacterEntity.toCharacter(): Character {
         return Character(
             id,
