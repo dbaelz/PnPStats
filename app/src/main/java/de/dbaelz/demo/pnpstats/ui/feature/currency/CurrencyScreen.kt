@@ -109,7 +109,7 @@ private fun CurrencyInfo(
 
                 if (states.none { it.error }) {
                     onEvent(
-                        Event.UpdateCurrencyAmounts(
+                        Event.AdjustCurrency(
                             characterId, Character.Currency(
                                 platinum = platinumState.value.toIntOrNull() ?: 0,
                                 gold = goldState.value.toIntOrNull() ?: 0,
@@ -124,7 +124,7 @@ private fun CurrencyInfo(
                 .height(TextFieldDefaults.MinHeight)
                 .fillMaxWidth()
         ) {
-            Text("Update amounts")
+            Text("Adjust amounts")
         }
     }
 }

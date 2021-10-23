@@ -55,14 +55,20 @@ class CharacterRepository @Inject constructor(private val characterDao: Characte
         }
     }
 
-    suspend fun updateCharacterCurrency(characterId: Int, currency: Character.Currency) {
+    suspend fun updateCharacterCurrency(
+        characterId: Int,
+        platinum: Int,
+        gold: Int,
+        silver: Int,
+        copper: Int
+    ) {
         withContext(Dispatchers.IO) {
             characterDao.updateCurrencyForCharacter(
                 characterId = characterId,
-                platinum = currency.platinum,
-                gold = currency.gold,
-                silver = currency.silver,
-                copper = currency.copper
+                platinum = platinum,
+                gold = gold,
+                silver = silver,
+                copper = copper
             )
         }
     }

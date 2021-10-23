@@ -2,8 +2,8 @@ package de.dbaelz.demo.pnpstats.ui.feature.currency
 
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import de.dbaelz.demo.pnpstats.data.character.usecase.AdjustCharacterCurrencyUseCase
 import de.dbaelz.demo.pnpstats.data.character.usecase.GetLastCharacterUseCase
-import de.dbaelz.demo.pnpstats.data.character.usecase.UpdateCharacterCurrencyUseCase
 import de.dbaelz.demo.pnpstats.data.common.ApiResult
 import de.dbaelz.demo.pnpstats.ui.feature.BaseViewModel
 import de.dbaelz.demo.pnpstats.ui.feature.currency.CurrencyContract.*
@@ -13,7 +13,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CurrencyViewModel @Inject constructor(
     private val getLastCharacter: GetLastCharacterUseCase,
-    private val updateCharacterCurrency: UpdateCharacterCurrencyUseCase
+    private val adjustCharacterCurrency: AdjustCharacterCurrencyUseCase
 ) : BaseViewModel<State, Event, Effect>() {
 
     init {
@@ -39,9 +39,9 @@ class CurrencyViewModel @Inject constructor(
     override fun provideInitialState() = State.Loading
 
     override fun handleEvent(event: Event) {
-        if (event is Event.UpdateCurrencyAmounts) {
+        if (event is Event.AdjustCurrency) {
             viewModelScope.launch {
-                updateCharacterCurrency(event.characterId, event.currency)
+                adjustCharacterCurrency(event.characterId, event.currency)
 
                 update()
             }
