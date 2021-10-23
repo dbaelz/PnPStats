@@ -3,13 +3,17 @@ package de.dbaelz.demo.pnpstats.ui.feature.experience
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
@@ -61,6 +65,7 @@ fun ExperienceScreen(
     }
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun ExperienceInfo(
     experience: Int,
@@ -68,6 +73,7 @@ private fun ExperienceInfo(
     onExperienceAdded: (value: String) -> Unit
 ) {
     var textFieldValue by remember { mutableStateOf(TextFieldValue()) }
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     Column(
         modifier = Modifier
@@ -96,8 +102,18 @@ private fun ExperienceInfo(
             OutlinedTextField(
                 value = textFieldValue,
                 onValueChange = { textFieldValue = it },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Done
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        keyboardController?.hide()
+                        onExperienceAdded(textFieldValue.text)
+                    }
+                ),
                 isError = isError,
+                singleLine = true,
                 modifier = Modifier
                     .fillMaxHeight()
                     .weight(1f)
