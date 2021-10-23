@@ -9,6 +9,6 @@ class AddCharacterExperienceUseCase @Inject constructor(
     private val characterRepository: CharacterRepository
 ) {
     suspend operator fun invoke(characterId: Int, experience: Int) {
-        characterRepository.updateCharacterExperience(characterId, experience)
+        characterRepository.addCharacterExperience(characterId, experience)
     }
 }
