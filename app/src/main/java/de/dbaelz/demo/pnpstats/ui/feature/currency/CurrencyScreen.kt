@@ -118,6 +118,8 @@ private fun CurrencyInfo(
                             )
                         )
                     )
+
+                    states.forEach { it.reset() }
                 }
             },
             modifier = Modifier
@@ -164,7 +166,7 @@ private fun CurrencyTextField(
     )
 }
 
-private class CurrencyTextFieldState(initialValue: String) {
+private class CurrencyTextFieldState(val initialValue: String) {
     var value: String by mutableStateOf(initialValue)
         private set
 
@@ -173,6 +175,11 @@ private class CurrencyTextFieldState(initialValue: String) {
 
     fun updateValue(newValue: String) {
         value = newValue
+        error = false
+    }
+
+    fun reset() {
+        updateValue(initialValue)
         error = false
     }
 
