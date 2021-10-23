@@ -109,12 +109,12 @@ private fun CurrencyInfo(
 
                 if (states.none { it.error }) {
                     onEvent(
-                        Event.UpdateCurrency(
+                        Event.UpdateCurrencyAmounts(
                             characterId, Character.Currency(
                                 platinum = platinumState.value.toIntOrNull() ?: 0,
-                                gold = platinumState.value.toIntOrNull() ?: 0,
-                                silver = platinumState.value.toIntOrNull() ?: 0,
-                                copper = platinumState.value.toIntOrNull() ?: 0,
+                                gold = goldState.value.toIntOrNull() ?: 0,
+                                silver = silverState.value.toIntOrNull() ?: 0,
+                                copper = copperState.value.toIntOrNull() ?: 0,
                             )
                         )
                     )

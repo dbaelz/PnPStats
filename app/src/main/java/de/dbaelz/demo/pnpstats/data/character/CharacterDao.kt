@@ -21,4 +21,14 @@ interface CharacterDao {
 
     @Query("UPDATE CharacterEntity SET experience = experience + :experience WHERE id = :characterId")
     fun updateExperienceForCharacter(characterId: Int, experience: Int)
+
+    // TODO: Suboptimal naming and maybe we should do the calculation in the use case (and validate)
+    @Query("UPDATE CharacterEntity SET platinum = platinum + :platinum, gold = gold + :gold, silver = silver +:silver, copper = copper + :copper WHERE id = :characterId")
+    fun updateCurrencyForCharacter(
+        characterId: Int,
+        platinum: Int,
+        gold: Int,
+        silver: Int,
+        copper: Int
+    )
 }
