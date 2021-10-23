@@ -19,7 +19,7 @@ class CurrencyViewModel @Inject constructor(
             when (val result = getLastCharacter()) {
                 is ApiResult.Success -> {
                     updateState {
-                        State.CurrencyInfo(result.value.currency)
+                        State.CurrencyInfo(result.value.id, result.value.currency)
                     }
                 }
                 is ApiResult.Error -> {
@@ -32,5 +32,6 @@ class CurrencyViewModel @Inject constructor(
 
     override fun provideInitialState() = State.Loading
 
-    override fun handleEvent(event: Event) {}
+    override fun handleEvent(event: Event) {
+    }
 }

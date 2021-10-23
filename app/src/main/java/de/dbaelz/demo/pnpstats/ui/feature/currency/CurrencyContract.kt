@@ -8,10 +8,12 @@ import de.dbaelz.demo.pnpstats.ui.feature.ViewState
 class CurrencyContract {
     sealed class State : ViewState {
         object Loading : State()
-        data class CurrencyInfo(val currency: Character.Currency) : State()
+        data class CurrencyInfo(val characterId: Int, val currency: Character.Currency) : State()
     }
 
-    object Event : ViewEvent
+    sealed class Event : ViewEvent {
+        data class UpdateCurrency(val characterId: Int, val currency: Character.Currency) : Event()
+    }
 
     sealed class Effect : ViewSideEffect {
         object ErrorLoadingCharacter : Effect()
