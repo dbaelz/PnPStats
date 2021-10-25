@@ -16,6 +16,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -130,7 +131,7 @@ private fun ExperienceInfo(
             ),
             isError = isError,
             singleLine = true,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth().testTag("TEST_EXPERIENCE_TEXTFIELD")
         )
 
         Spacer(Modifier.height(8.dp))
