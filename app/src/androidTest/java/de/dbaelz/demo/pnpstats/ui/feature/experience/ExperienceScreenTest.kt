@@ -3,6 +3,7 @@ package de.dbaelz.demo.pnpstats.ui.feature.experience
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
 import junit.framework.Assert.assertEquals
@@ -54,19 +55,20 @@ class ExperienceScreenTest {
 
     @Test
     fun addingExperienceWithButtonTriggersEvent() {
+        val characterId = 23
         val initialExperience = 4242
         val addedExperience = 3
 
         testRule.setContent {
             MaterialTheme {
                 ExperienceScreen(
-                    state = ExperienceContract.State.ExperienceInfo(1, initialExperience),
+                    state = ExperienceContract.State.ExperienceInfo(characterId, initialExperience),
                     effectFlow = null,
                     onEvent = {
                         assertEquals(
-                            addedExperience,
-                            (it as ExperienceContract.Event.AddExperience).experience
+                            characterId, (it as ExperienceContract.Event.AddExperience).characterId
                         )
+                        assertEquals(addedExperience, it.experience)
                     },
                     onNavigation = {}
                 )
@@ -93,13 +95,9 @@ class ExperienceScreenTest {
                     effectFlow = null,
                     onEvent = {
                         assertEquals(
-                            characterId,
-                            (it as ExperienceContract.Event.AddExperience).characterId
+                            characterId, (it as ExperienceContract.Event.AddExperience).characterId
                         )
-                        assertEquals(
-                            addedExperience,
-                            (it as ExperienceContract.Event.AddExperience).experience
-                        )
+                        assertEquals(addedExperience, it.experience)
                     },
                     onNavigation = {}
                 )
@@ -110,5 +108,26 @@ class ExperienceScreenTest {
 
         textField.performTextInput(addedExperience.toString())
         textField.performImeAction()
+    }
+
+    @Test
+    fun addingInvalidInputShowsError() {
+        testRule.setContent {
+            MaterialTheme {
+                ExperienceScreen(
+                    state = ExperienceContract.State.ExperienceInfo(23, 4242),
+                    effectFlow = null,
+                    onEvent = {},
+                    onNavigation = {}
+                )
+            }
+        }
+
+        val textField = testRule.onNode(hasTestTag("TEST_EXPERIENCE_TEXTFIELD"))
+
+        textField.performTextInput("invalid input")
+        textField.performImeAction()
+        textField.assert(SemanticsMatcher.keyIsDefined(SemanticsProperties.Error))
+            .assert(SemanticsMatcher.expectValue(SemanticsProperties.Error, "Invalid input"))
     }
 }
