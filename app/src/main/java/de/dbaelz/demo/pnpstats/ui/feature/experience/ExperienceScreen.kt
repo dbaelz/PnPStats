@@ -11,6 +11,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -20,7 +21,6 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import de.dbaelz.demo.pnpstats.ui.feature.LAUNCHED_EFFECT_KEY
@@ -76,12 +76,12 @@ private fun ExperienceInfo(
     isError: Boolean,
     onExperienceAdded: (value: String) -> Unit
 ) {
-    var textFieldValue by remember { mutableStateOf(TextFieldValue()) }
+    var text by rememberSaveable { mutableStateOf("") }
     val keyboardController = LocalSoftwareKeyboardController.current
 
     val addExperience = {
         keyboardController?.hide()
-        onExperienceAdded(textFieldValue.text)
+        onExperienceAdded(text)
     }
 
     Column(
@@ -117,8 +117,8 @@ private fun ExperienceInfo(
         Spacer(Modifier.height(24.dp))
 
         OutlinedTextField(
-            value = textFieldValue,
-            onValueChange = { textFieldValue = it },
+            value = text,
+            onValueChange = { text = it },
             label = { Text("Experience") },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Number,
@@ -131,7 +131,9 @@ private fun ExperienceInfo(
             ),
             isError = isError,
             singleLine = true,
-            modifier = Modifier.fillMaxWidth().testTag("TEST_EXPERIENCE_TEXTFIELD")
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag("TEST_EXPERIENCE_TEXTFIELD")
         )
 
         Spacer(Modifier.height(8.dp))
@@ -140,6 +142,7 @@ private fun ExperienceInfo(
             onClick = {
                 addExperience()
             },
+            enabled = text.isNotEmpty(),
             modifier = Modifier
                 .height(TextFieldDefaults.MinHeight)
                 .fillMaxWidth()

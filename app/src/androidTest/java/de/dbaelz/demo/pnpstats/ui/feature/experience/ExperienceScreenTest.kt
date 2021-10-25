@@ -51,6 +51,7 @@ class ExperienceScreenTest {
         testRule.onNodeWithContentDescription(Icons.Default.AddCircle.name)
             .assertExists()
             .assertIsDisplayed()
+            .assertIsNotEnabled()
     }
 
     @Test
@@ -78,8 +79,9 @@ class ExperienceScreenTest {
         val textField = testRule.onNode(hasTestTag("TEST_EXPERIENCE_TEXTFIELD"))
         val button = testRule.onNodeWithContentDescription(Icons.Default.AddCircle.name)
 
+        button.assertIsNotEnabled()
         textField.performTextInput(addedExperience.toString())
-        button.performClick()
+        button.assertIsEnabled().performClick()
     }
 
     @Test
@@ -104,8 +106,9 @@ class ExperienceScreenTest {
             }
         }
 
-        val textField = testRule.onNode(hasTestTag("TEST_EXPERIENCE_TEXTFIELD"))
+        testRule.onNodeWithContentDescription(Icons.Default.AddCircle.name).assertIsNotEnabled()
 
+        val textField = testRule.onNode(hasTestTag("TEST_EXPERIENCE_TEXTFIELD"))
         textField.performTextInput(addedExperience.toString())
         textField.performImeAction()
     }
