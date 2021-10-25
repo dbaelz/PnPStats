@@ -1,15 +1,17 @@
 package de.dbaelz.demo.pnpstats.ui.feature.createcharacter
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
+import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
-import androidx.compose.material.TextField
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.unit.dp
 import de.dbaelz.demo.pnpstats.ui.feature.LAUNCHED_EFFECT_KEY
 import de.dbaelz.demo.pnpstats.ui.feature.createcharacter.CreateCharacterContract.Event
 import de.dbaelz.demo.pnpstats.ui.feature.createcharacter.CreateCharacterContract.NavigateToCharactersEffect
@@ -31,17 +33,31 @@ fun CreateCharacterScreen(
 
     var textFieldValue by remember { mutableStateOf(TextFieldValue()) }
 
-    // TODO: Dummy UI to create character
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+            .verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
     ) {
-        TextField(value = textFieldValue, onValueChange = { textFieldValue = it })
+        OutlinedTextField(
+            value = textFieldValue,
+            onValueChange = { textFieldValue = it },
+            label = { Text("Name") },
+            modifier = Modifier.fillMaxWidth()
+        )
 
-        Button(onClick = {
-            onEvent(Event.CreateCharacter(textFieldValue.text))
-        }) {
+        Spacer(Modifier.height(8.dp))
+
+        Button(
+            onClick = {
+                onEvent(Event.CreateCharacter(textFieldValue.text))
+            },
+            modifier = Modifier
+                .height(TextFieldDefaults.MinHeight)
+                .fillMaxWidth()
+        ) {
             Text("Create Character")
         }
     }
