@@ -78,6 +78,11 @@ private fun ExperienceInfo(
     var textFieldValue by remember { mutableStateOf(TextFieldValue()) }
     val keyboardController = LocalSoftwareKeyboardController.current
 
+    val addExperience = {
+        keyboardController?.hide()
+        onExperienceAdded(textFieldValue.text)
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -110,41 +115,35 @@ private fun ExperienceInfo(
 
         Spacer(Modifier.height(24.dp))
 
-        Row(
+        OutlinedTextField(
+            value = textFieldValue,
+            onValueChange = { textFieldValue = it },
+            label = { Text("Experience") },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Number,
+                imeAction = ImeAction.Done
+            ),
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    addExperience()
+                }
+            ),
+            isError = isError,
+            singleLine = true,
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(Modifier.height(8.dp))
+
+        Button(
+            onClick = {
+                addExperience()
+            },
             modifier = Modifier
-                .fillMaxWidth()
                 .height(TextFieldDefaults.MinHeight)
+                .fillMaxWidth()
         ) {
-            OutlinedTextField(
-                value = textFieldValue,
-                onValueChange = { textFieldValue = it },
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Number,
-                    imeAction = ImeAction.Done
-                ),
-                keyboardActions = KeyboardActions(
-                    onDone = {
-                        keyboardController?.hide()
-                        onExperienceAdded(textFieldValue.text)
-                    }
-                ),
-                isError = isError,
-                singleLine = true,
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .weight(1f)
-            )
-
-            Spacer(Modifier.width(8.dp))
-
-            Button(
-                onClick = {
-                    onExperienceAdded(textFieldValue.text)
-                },
-                modifier = Modifier.fillMaxHeight()
-            ) {
-                Icon(Icons.Default.AddCircle, Icons.Default.AddCircle.name)
-            }
+            Icon(Icons.Default.AddCircle, Icons.Default.AddCircle.name)
         }
 
     }
