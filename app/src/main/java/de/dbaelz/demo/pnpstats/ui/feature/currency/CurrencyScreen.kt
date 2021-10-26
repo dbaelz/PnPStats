@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -29,6 +30,7 @@ import de.dbaelz.demo.pnpstats.ui.feature.currency.CurrencyContract.State
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
+import java.util.*
 
 @Composable
 fun CurrencyScreen(
@@ -165,6 +167,7 @@ private fun CurrencyTextField(
         modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 4.dp)
+            .testTag("TEST_${labelText.uppercase(Locale.getDefault())}_TEXTFIELD")
     )
 }
 
