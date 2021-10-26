@@ -1,9 +1,7 @@
 package de.dbaelz.demo.pnpstats.ui.feature.currency
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActionScope
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -16,14 +14,12 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import de.dbaelz.demo.pnpstats.data.character.Character
-import de.dbaelz.demo.pnpstats.data.character.toFormattedString
 import de.dbaelz.demo.pnpstats.ui.feature.LAUNCHED_EFFECT_KEY
+import de.dbaelz.demo.pnpstats.ui.feature.common.CurrencyRectangle
 import de.dbaelz.demo.pnpstats.ui.feature.common.LoadingIndicator
 import de.dbaelz.demo.pnpstats.ui.feature.currency.CurrencyContract.*
 import de.dbaelz.demo.pnpstats.ui.feature.currency.CurrencyContract.State
@@ -79,16 +75,7 @@ private fun CurrencyInfo(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Text(
-            text = currency.toFormattedString(),
-            style = MaterialTheme.typography.h5,
-            fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-                .border(8.dp, MaterialTheme.colors.primary, RoundedCornerShape(16.dp))
-                .padding(32.dp)
-        )
+        CurrencyRectangle(currency)
 
         Spacer(Modifier.height(24.dp))
 

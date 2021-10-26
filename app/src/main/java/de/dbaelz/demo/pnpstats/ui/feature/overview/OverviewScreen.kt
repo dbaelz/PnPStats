@@ -1,14 +1,13 @@
 package de.dbaelz.demo.pnpstats.ui.feature.overview
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Card
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -17,8 +16,9 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import de.dbaelz.demo.pnpstats.data.character.toFormattedString
 import de.dbaelz.demo.pnpstats.ui.feature.LAUNCHED_EFFECT_KEY
+import de.dbaelz.demo.pnpstats.ui.feature.common.CurrencyRectangle
+import de.dbaelz.demo.pnpstats.ui.feature.common.ExperienceCircle
 import de.dbaelz.demo.pnpstats.ui.feature.common.LoadingIndicator
 import de.dbaelz.demo.pnpstats.ui.feature.overview.OverviewContract.*
 import kotlinx.coroutines.flow.Flow
@@ -52,41 +52,33 @@ fun OverviewScreen(
 
 @Composable
 private fun CharacterInfo(character: de.dbaelz.demo.pnpstats.data.character.Character) {
-    // TODO: Only dummy UI
-    Card(
-        elevation = 12.dp,
+    Column(
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxSize()
             .padding(16.dp)
+            .verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(8.dp)
-        ) {
-            Text(
-                text = character.name,
-                style = MaterialTheme.typography.h3,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
-            )
+        Text(
+            text = character.name,
+            style = MaterialTheme.typography.h3,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth()
+        )
 
-            Spacer(Modifier.height(24.dp))
+        Spacer(Modifier.height(24.dp))
 
-            CharacterDetail(Icons.Default.Info, "${character.experience} XP")
+        ExperienceCircle(character.experience)
 
-            Spacer(Modifier.height(24.dp))
+        Spacer(Modifier.height(24.dp))
 
-            CharacterDetail(
-                Icons.Default.AccountBox,
-                character.currency.toFormattedString()
-            )
+        CurrencyRectangle(character.currency)
 
-            Spacer(Modifier.height(24.dp))
+        Spacer(Modifier.height(24.dp))
 
-            CharacterDetail(Icons.Default.Email, character.notes)
-        }
+        CharacterDetail(Icons.Default.Email, character.notes)
     }
 }
 
