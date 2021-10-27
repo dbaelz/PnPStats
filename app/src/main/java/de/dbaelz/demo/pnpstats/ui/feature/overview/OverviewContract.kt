@@ -11,7 +11,10 @@ class OverviewContract {
         data class CharacterInfo(val character: Character) : State()
     }
 
-    object Event : ViewEvent
+    sealed class Event : ViewEvent {
+        data class ExperienceSelected(val characterId: Int) : Event()
+        data class CurrencySelected(val characterId: Int) : Event()
+    }
 
     sealed class Effect : ViewSideEffect {
         object ErrorLoadingCharacter : Effect()

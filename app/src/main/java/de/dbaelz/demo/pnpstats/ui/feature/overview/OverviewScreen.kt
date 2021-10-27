@@ -1,5 +1,6 @@
 package de.dbaelz.demo.pnpstats.ui.feature.overview
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -46,12 +47,19 @@ fun OverviewScreen(
 
     when (state) {
         State.Loading -> LoadingIndicator()
-        is State.CharacterInfo -> CharacterInfo(state.character)
+        is State.CharacterInfo -> CharacterInfo(
+            character = state.character,
+            onExperienceSelected = { onEvent(Event.ExperienceSelected(it)) },
+            onCurrencySelected = { onEvent(Event.CurrencySelected(it)) })
     }
 }
 
 @Composable
-private fun CharacterInfo(character: de.dbaelz.demo.pnpstats.data.character.Character) {
+private fun CharacterInfo(
+    character: de.dbaelz.demo.pnpstats.data.character.Character,
+    onExperienceSelected: (Int) -> Unit = {},
+    onCurrencySelected: (Int) -> Unit = {}
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -70,11 +78,15 @@ private fun CharacterInfo(character: de.dbaelz.demo.pnpstats.data.character.Char
 
         Spacer(Modifier.height(24.dp))
 
-        ExperienceCircle(character.experience)
+        Box(Modifier.clickable { onExperienceSelected(character.id) }) {
+            ExperienceCircle(character.experience)
+        }
 
         Spacer(Modifier.height(24.dp))
 
-        CurrencyRectangle(character.currency)
+        Box(Modifier.clickable { onCurrencySelected(character.id) }) {
+            CurrencyRectangle(character.currency)
+        }
 
         Spacer(Modifier.height(24.dp))
 

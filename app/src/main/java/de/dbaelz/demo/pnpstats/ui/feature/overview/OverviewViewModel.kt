@@ -32,5 +32,10 @@ class OverviewViewModel @Inject constructor(
 
     override fun provideInitialState() = State.Loading
 
-    override fun handleEvent(event: Event) {}
+    override fun handleEvent(event: Event) {
+        when (event) {
+            is Event.CurrencySelected -> setEffect { Effect.Navigation.ToCurrency(event.characterId) }
+            is Event.ExperienceSelected -> setEffect { Effect.Navigation.ToExperience(event.characterId) }
+        }
+    }
 }
