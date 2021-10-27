@@ -70,6 +70,8 @@ class OverviewScreenTest {
             notes = "No name, no notes"
         )
 
+        var onEventFinished = false
+
         testRule.setContent {
             MaterialTheme {
                 OverviewScreen(
@@ -80,6 +82,8 @@ class OverviewScreenTest {
                             expectedCharacter.id,
                             (it as OverviewContract.Event.ExperienceSelected).characterId
                         )
+
+                        onEventFinished = true
                     },
                     onNavigation = {}
                 )
@@ -90,6 +94,8 @@ class OverviewScreenTest {
             .assertExists()
             .assertIsDisplayed()
             .performClick()
+
+        testRule.waitUntil { onEventFinished }
     }
 
     @Test
@@ -102,6 +108,8 @@ class OverviewScreenTest {
             notes = "No name, no notes"
         )
 
+        var onEventFinished = false
+
         testRule.setContent {
             MaterialTheme {
                 OverviewScreen(
@@ -112,6 +120,8 @@ class OverviewScreenTest {
                             expectedCharacter.id,
                             (it as OverviewContract.Event.CurrencySelected).characterId
                         )
+
+                        onEventFinished = true
                     },
                     onNavigation = {}
                 )
@@ -122,5 +132,7 @@ class OverviewScreenTest {
             .assertExists()
             .assertIsDisplayed()
             .performClick()
+
+        testRule.waitUntil { onEventFinished }
     }
 }

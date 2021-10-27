@@ -51,14 +51,14 @@ fun ExperienceScreen(
         is ExperienceContract.State.ExperienceInfo -> {
             var errorState by remember { mutableStateOf(false) }
 
-            ExperienceInfo(state.experience, errorState) {
-                val value = it.toIntOrNull()
+            ExperienceInfo(state.experience, errorState) { experienceText: String, reason: String ->
+                val experience = experienceText.toIntOrNull()
 
-                if (value == null || value < 0) {
+                if (experience == null || experience < 0) {
                     errorState = true
                 } else {
                     errorState = false
-                    onEvent(Event.AddExperience(state.characterId, value))
+                    onEvent(Event.AddExperience(state.characterId, experience, reason))
                 }
             }
         }
@@ -70,14 +70,15 @@ fun ExperienceScreen(
 private fun ExperienceInfo(
     experience: Int,
     isError: Boolean,
-    onExperienceAdded: (value: String) -> Unit
+    onExperienceAdded: (experience: String, reason: String) -> Unit
 ) {
-    var text by rememberSaveable { mutableStateOf("") }
+    var experienceInput by rememberSaveable { mutableStateOf("") }
+    var reasonInput by rememberSaveable { mutableStateOf("") }
     val keyboardController = LocalSoftwareKeyboardController.current
 
     val addExperience = {
         keyboardController?.hide()
-        onExperienceAdded(text)
+        onExperienceAdded(experienceInput, reasonInput)
     }
 
     Column(
@@ -93,17 +94,12 @@ private fun ExperienceInfo(
         Spacer(Modifier.height(24.dp))
 
         OutlinedTextField(
-            value = text,
-            onValueChange = { text = it },
+            value = experienceInput,
+            onValueChange = { experienceInput = it },
             label = { Text("Experience") },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Number,
-                imeAction = ImeAction.Done
-            ),
-            keyboardActions = KeyboardActions(
-                onDone = {
-                    addExperience()
-                }
+                imeAction = ImeAction.Next
             ),
             isError = isError,
             singleLine = true,
@@ -114,11 +110,31 @@ private fun ExperienceInfo(
 
         Spacer(Modifier.height(8.dp))
 
+        OutlinedTextField(
+            value = reasonInput,
+            onValueChange = { reasonInput = it },
+            label = { Text("Reason") },
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Done
+            ),
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    addExperience()
+                }
+            ),
+            singleLine = true,
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag("TEST_REASON_TEXTFIELD")
+        )
+
+        Spacer(Modifier.height(8.dp))
+
         Button(
             onClick = {
                 addExperience()
             },
-            enabled = text.isNotEmpty(),
+            enabled = experienceInput.isNotEmpty(),
             modifier = Modifier
                 .height(TextFieldDefaults.MinHeight)
                 .fillMaxWidth()

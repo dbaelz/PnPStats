@@ -19,9 +19,6 @@ interface CharacterDao {
     @Query("DELETE FROM CharacterEntity WHERE id = :id")
     fun delete(id: Int)
 
-    @Query("UPDATE CharacterEntity SET experience = experience + :experience WHERE id = :characterId")
-    fun addExperienceForCharacter(characterId: Int, experience: Int)
-
     @Query("UPDATE CharacterEntity SET platinum = :platinum, gold = :gold, silver = :silver, copper = :copper WHERE id = :characterId")
     fun updateCurrencyForCharacter(
         characterId: Int,

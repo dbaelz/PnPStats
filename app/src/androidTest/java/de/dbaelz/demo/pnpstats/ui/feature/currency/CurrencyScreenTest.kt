@@ -64,6 +64,8 @@ class CurrencyScreenTest {
         val characterId = 23
         val expectedCurrency = Character.Currency(11, 22, 33, 44)
 
+        var onEventFinished = false
+
         testRule.setContent {
             MaterialTheme {
                 CurrencyScreen(
@@ -74,6 +76,8 @@ class CurrencyScreenTest {
                             characterId, (it as CurrencyContract.Event.AdjustCurrency).characterId
                         )
                         assertEquals(expectedCurrency, it.currency)
+
+                        onEventFinished = true
                     },
                     onNavigation = {}
                 )
@@ -90,5 +94,7 @@ class CurrencyScreenTest {
             .performTextInput(expectedCurrency.copper.toString())
 
         testRule.onNodeWithText("Adjust amounts").performClick()
+
+        testRule.waitUntil { onEventFinished }
     }
 }

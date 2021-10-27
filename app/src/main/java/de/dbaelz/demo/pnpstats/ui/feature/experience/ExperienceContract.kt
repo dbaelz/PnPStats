@@ -11,7 +11,7 @@ class ExperienceContract {
     }
 
     sealed class Event : ViewEvent {
-        data class AddExperience(val characterId: Int, val experience: Int) : Event()
+        data class AddExperience(val characterId: Int, val experience: Int, val reason: String = "") : Event()
     }
 
     sealed class Effect : ViewSideEffect {

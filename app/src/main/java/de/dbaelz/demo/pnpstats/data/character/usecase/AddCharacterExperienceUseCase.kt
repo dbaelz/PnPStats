@@ -8,7 +8,7 @@ import javax.inject.Singleton
 class AddCharacterExperienceUseCase @Inject constructor(
     private val characterRepository: CharacterRepository
 ) {
-    suspend operator fun invoke(characterId: Int, experience: Int) {
-        characterRepository.addCharacterExperience(characterId, experience)
+    suspend operator fun invoke(characterId: Int, experience: Int, reason: String = "") {
+        characterRepository.addExperienceForCharacter(characterId, experience, reason)
     }
 }

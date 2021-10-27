@@ -8,7 +8,6 @@ import androidx.room.PrimaryKey
 data class CharacterEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val name: String,
-    val experience: Int = 0,
     @Embedded val currency: Currency = Currency(),
     val notes: String = ""
 ) {

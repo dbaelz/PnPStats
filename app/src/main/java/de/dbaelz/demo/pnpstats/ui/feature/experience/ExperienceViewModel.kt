@@ -41,7 +41,7 @@ class ExperienceViewModel @Inject constructor(
     override fun handleEvent(event: Event) {
         if (event is Event.AddExperience) {
             viewModelScope.launch {
-                addCharacterExperience(event.characterId, event.experience)
+                addCharacterExperience(event.characterId, event.experience, event.reason)
 
                 update()
             }

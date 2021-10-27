@@ -59,6 +59,9 @@ class ExperienceScreenTest {
         val characterId = 23
         val initialExperience = 4242
         val addedExperience = 3
+        val addedReason = "Test Reason"
+
+        var onEventFinished = false
 
         testRule.setContent {
             MaterialTheme {
@@ -70,18 +73,25 @@ class ExperienceScreenTest {
                             characterId, (it as ExperienceContract.Event.AddExperience).characterId
                         )
                         assertEquals(addedExperience, it.experience)
+                        assertEquals(addedReason, it.reason)
+
+                        onEventFinished = true
                     },
                     onNavigation = {}
                 )
             }
         }
 
-        val textField = testRule.onNode(hasTestTag("TEST_EXPERIENCE_TEXTFIELD"))
+        val experienceTextField = testRule.onNode(hasTestTag("TEST_EXPERIENCE_TEXTFIELD"))
+        val reasonTextField = testRule.onNode(hasTestTag("TEST_REASON_TEXTFIELD"))
         val button = testRule.onNodeWithContentDescription(Icons.Default.AddCircle.name)
 
         button.assertIsNotEnabled()
-        textField.performTextInput(addedExperience.toString())
+        experienceTextField.performTextInput(addedExperience.toString())
+        reasonTextField.performTextInput(addedReason)
         button.assertIsEnabled().performClick()
+
+        testRule.waitUntil { onEventFinished }
     }
 
     @Test
@@ -89,6 +99,9 @@ class ExperienceScreenTest {
         val characterId = 23
         val initialExperience = 4242
         val addedExperience = 3
+        val addedReason = "Test Reason"
+
+        var onEventFinished = false
 
         testRule.setContent {
             MaterialTheme {
@@ -100,6 +113,9 @@ class ExperienceScreenTest {
                             characterId, (it as ExperienceContract.Event.AddExperience).characterId
                         )
                         assertEquals(addedExperience, it.experience)
+                        assertEquals(addedReason, it.reason)
+
+                        onEventFinished = true
                     },
                     onNavigation = {}
                 )
@@ -108,9 +124,15 @@ class ExperienceScreenTest {
 
         testRule.onNodeWithContentDescription(Icons.Default.AddCircle.name).assertIsNotEnabled()
 
-        val textField = testRule.onNode(hasTestTag("TEST_EXPERIENCE_TEXTFIELD"))
-        textField.performTextInput(addedExperience.toString())
-        textField.performImeAction()
+        val experienceTextField = testRule.onNode(hasTestTag("TEST_EXPERIENCE_TEXTFIELD"))
+        val reasonTextField = testRule.onNode(hasTestTag("TEST_REASON_TEXTFIELD"))
+
+        experienceTextField.performTextInput(addedExperience.toString())
+        experienceTextField.performImeAction()
+        reasonTextField.performTextInput(addedReason)
+        reasonTextField.performImeAction()
+
+        testRule.waitUntil { onEventFinished }
     }
 
     @Test
@@ -126,11 +148,15 @@ class ExperienceScreenTest {
             }
         }
 
-        val textField = testRule.onNode(hasTestTag("TEST_EXPERIENCE_TEXTFIELD"))
+        val experienceTextField = testRule.onNode(hasTestTag("TEST_EXPERIENCE_TEXTFIELD"))
+        val reasonTextField = testRule.onNode(hasTestTag("TEST_REASON_TEXTFIELD"))
 
-        textField.performTextInput("invalid input")
-        textField.performImeAction()
-        textField.assert(SemanticsMatcher.keyIsDefined(SemanticsProperties.Error))
+        experienceTextField.performTextInput("invalid input")
+        experienceTextField.performImeAction()
+
+        reasonTextField.performImeAction()
+
+        experienceTextField.assert(SemanticsMatcher.keyIsDefined(SemanticsProperties.Error))
             .assert(SemanticsMatcher.expectValue(SemanticsProperties.Error, "Invalid input"))
     }
 }

@@ -88,6 +88,8 @@ class CharactersScreenTest {
             Character(3, "three", 33, Character.Currency(3, 33, 333, 3333)),
         )
 
+        var onEventFinished = false
+
         testRule.setContent {
             MaterialTheme {
                 CharactersScreen(
@@ -98,6 +100,8 @@ class CharactersScreenTest {
                             expectedCharacters[0].id,
                             (it as CharactersContract.Event.CharacterSelected).id
                         )
+
+                        onEventFinished = true
                     },
                     onNavigation = {}
                 )
@@ -105,6 +109,7 @@ class CharactersScreenTest {
         }
 
         testRule.onNodeWithText(expectedCharacters[0].name).performClick()
+        testRule.waitUntil { onEventFinished }
     }
 
     @Test
@@ -114,6 +119,8 @@ class CharactersScreenTest {
             Character(2, "two", 22, Character.Currency(2, 22, 222, 2222)),
             Character(3, "three", 33, Character.Currency(3, 33, 333, 3333)),
         )
+
+        var onEventFinished = false
 
         testRule.setContent {
             MaterialTheme {
@@ -125,6 +132,7 @@ class CharactersScreenTest {
                             expectedCharacters[0].id,
                             (it as CharactersContract.Event.CharacterDeleted).id
                         )
+                        onEventFinished = true
                     },
                     onNavigation = {}
                 )
@@ -132,5 +140,6 @@ class CharactersScreenTest {
         }
 
         testRule.onNodeWithText(expectedCharacters[0].name).performTouchInput { swipeLeft() }
+        testRule.waitUntil { onEventFinished }
     }
 }
