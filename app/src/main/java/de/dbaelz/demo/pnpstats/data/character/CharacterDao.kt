@@ -8,7 +8,7 @@ import androidx.room.Query
 @Dao
 interface CharacterDao {
     @Query("SELECT * from CharacterEntity")
-    fun select(): List<CharacterEntity>
+    fun selectAll(): List<CharacterEntity>
 
     @Query("SELECT * from CharacterEntity WHERE id IS :id")
     fun selectById(id: Int): CharacterEntity?

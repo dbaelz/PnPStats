@@ -37,7 +37,7 @@ class CharacterRepository @Inject constructor(
         val characters: MutableList<Character> = mutableListOf()
 
         withContext(Dispatchers.IO) {
-            characterDao.select().forEach {
+            characterDao.selectAll().forEach {
                 val experience = experienceDao.getExperienceForCharacter(it.id)
 
                 characters.add(it.toCharacter(experience))
