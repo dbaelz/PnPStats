@@ -1,4 +1,4 @@
-package de.dbaelz.demo.pnpstats.data.character.usecase
+package de.dbaelz.demo.pnpstats.data.experience.usecase
 
 import de.dbaelz.demo.pnpstats.data.character.CharacterRepository
 import javax.inject.Inject
