@@ -37,7 +37,11 @@ class ExperienceScreenTest {
         testRule.setContent {
             MaterialTheme {
                 ExperienceScreen(
-                    state = ExperienceContract.State.ExperienceInfo(1, initialExperience),
+                    state = ExperienceContract.State.ExperienceInfo(
+                        1,
+                        initialExperience,
+                        emptyList()
+                    ),
                     effectFlow = null,
                     onEvent = {},
                     onNavigation = {}
@@ -66,7 +70,11 @@ class ExperienceScreenTest {
         testRule.setContent {
             MaterialTheme {
                 ExperienceScreen(
-                    state = ExperienceContract.State.ExperienceInfo(characterId, initialExperience),
+                    state = ExperienceContract.State.ExperienceInfo(
+                        characterId,
+                        initialExperience,
+                        emptyList()
+                    ),
                     effectFlow = null,
                     onEvent = {
                         assertEquals(
@@ -106,7 +114,11 @@ class ExperienceScreenTest {
         testRule.setContent {
             MaterialTheme {
                 ExperienceScreen(
-                    state = ExperienceContract.State.ExperienceInfo(characterId, initialExperience),
+                    state = ExperienceContract.State.ExperienceInfo(
+                        characterId,
+                        initialExperience,
+                        emptyList()
+                    ),
                     effectFlow = null,
                     onEvent = {
                         assertEquals(
@@ -140,7 +152,7 @@ class ExperienceScreenTest {
         testRule.setContent {
             MaterialTheme {
                 ExperienceScreen(
-                    state = ExperienceContract.State.ExperienceInfo(23, 4242),
+                    state = ExperienceContract.State.ExperienceInfo(23, 4242, emptyList()),
                     effectFlow = null,
                     onEvent = {},
                     onNavigation = {}
@@ -158,5 +170,52 @@ class ExperienceScreenTest {
 
         experienceTextField.assert(SemanticsMatcher.keyIsDefined(SemanticsProperties.Error))
             .assert(SemanticsMatcher.expectValue(SemanticsProperties.Error, "Invalid input"))
+    }
+
+    @Test
+    fun experienceDetailsAreShown() {
+        val experienceDetails = listOf(
+            100 to "",
+            200 to "Test 200",
+            20 to "Test 20",
+            4000 to ""
+        )
+
+        testRule.setContent {
+            MaterialTheme {
+                ExperienceScreen(
+                    state = ExperienceContract.State.ExperienceInfo(1, 12345, experienceDetails),
+                    effectFlow = null,
+                    onEvent = {},
+                    onNavigation = {}
+                )
+            }
+        }
+
+        testRule.onNodeWithText("Experience Log").assertExists().assertIsDisplayed()
+        experienceDetails.forEach {
+            testRule.onNodeWithText(it.first.toString()).assertExists().assertIsDisplayed()
+            if (it.second.isNotEmpty()) {
+                testRule.onNodeWithText(it.second).assertExists().assertIsDisplayed()
+            }
+        }
+    }
+
+    @Test
+    fun experienceDetailsAreNotShownWhenEmpty() {
+        val experienceDetails = emptyList<Pair<Int, String>>()
+
+        testRule.setContent {
+            MaterialTheme {
+                ExperienceScreen(
+                    state = ExperienceContract.State.ExperienceInfo(1, 0, experienceDetails),
+                    effectFlow = null,
+                    onEvent = {},
+                    onNavigation = {}
+                )
+            }
+        }
+
+        testRule.onNodeWithText("Experience Log").assertDoesNotExist()
     }
 }

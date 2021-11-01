@@ -71,6 +71,19 @@ class CharacterRepository @Inject constructor(
         }
     }
 
+    suspend fun getExperienceDetailsForCharacter(characterId: Int): List<Pair<Int, String>> {
+        val experience = mutableListOf<Pair<Int, String>>()
+
+        withContext(Dispatchers.IO) {
+            experience.addAll(
+                experienceDao.getExperienceDetails(characterId).map {
+                    it.experience to it.reason
+                })
+        }
+
+        return experience
+    }
+
     suspend fun updateCharacterCurrency(
         characterId: Int,
         platinum: Int,

@@ -11,4 +11,7 @@ interface ExperienceDao {
 
     @Query("SELECT SUM(experience) FROM ExperienceEntity WHERE characterId = :characterId")
     fun getExperienceForCharacter(characterId: Int): Int
+
+    @Query("SELECT * FROM ExperienceEntity WHERE characterId = :characterId ORDER BY id DESC")
+    fun getExperienceDetails(characterId: Int): List<ExperienceEntity>
 }
