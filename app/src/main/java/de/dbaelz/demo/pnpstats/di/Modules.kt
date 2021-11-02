@@ -9,6 +9,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import de.dbaelz.demo.pnpstats.data.PnPStatsDatabase
 import de.dbaelz.demo.pnpstats.data.character.CharacterDao
+import de.dbaelz.demo.pnpstats.data.currency.CurrencyDao
 import de.dbaelz.demo.pnpstats.data.experience.ExperienceDao
 import javax.inject.Singleton
 
@@ -36,5 +37,10 @@ class DatabaseModule {
     @Provides
     fun provideExperienceDao(database: PnPStatsDatabase): ExperienceDao {
         return database.experienceDao()
+    }
+
+    @Provides
+    fun provideCurrencyDao(database: PnPStatsDatabase): CurrencyDao {
+        return database.currencyDao()
     }
 }

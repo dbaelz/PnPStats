@@ -1,6 +1,8 @@
 package de.dbaelz.demo.pnpstats.data.character
 
 import de.dbaelz.demo.pnpstats.data.common.ApiResult
+import de.dbaelz.demo.pnpstats.data.currency.CurrencyDao
+import de.dbaelz.demo.pnpstats.data.currency.CurrencyEntity
 import de.dbaelz.demo.pnpstats.data.experience.ExperienceDao
 import de.dbaelz.demo.pnpstats.data.experience.ExperienceEntity
 import kotlinx.coroutines.Dispatchers
@@ -11,7 +13,8 @@ import javax.inject.Singleton
 @Singleton
 class CharacterRepository @Inject constructor(
     private val characterDao: CharacterDao,
-    private val experienceDao: ExperienceDao
+    private val experienceDao: ExperienceDao,
+    private val currencyDao: CurrencyDao
 ) {
     suspend fun getCharacter(characterId: Int): ApiResult<Character> {
         var character: Character? = null
@@ -20,7 +23,8 @@ class CharacterRepository @Inject constructor(
             val entity = characterDao.selectById(characterId)
             if (entity != null) {
                 val experience = experienceDao.getExperienceForCharacter(entity.id)
-                character = entity.toCharacter(experience)
+                val currency = currencyDao.getCurrencyForCharacter(entity.id) ?: CurrencyEntity()
+                character = entity.toCharacter(experience, currency)
             }
         }
 
@@ -39,8 +43,8 @@ class CharacterRepository @Inject constructor(
         withContext(Dispatchers.IO) {
             characterDao.selectAll().forEach {
                 val experience = experienceDao.getExperienceForCharacter(it.id)
-
-                characters.add(it.toCharacter(experience))
+                val currency = currencyDao.getCurrencyForCharacter(it.id) ?: CurrencyEntity()
+                characters.add(it.toCharacter(experience, currency))
             }
         }
 
@@ -92,17 +96,19 @@ class CharacterRepository @Inject constructor(
         copper: Int
     ) {
         withContext(Dispatchers.IO) {
-            characterDao.updateCurrencyForCharacter(
-                characterId = characterId,
-                platinum = platinum,
-                gold = gold,
-                silver = silver,
-                copper = copper
+            currencyDao.insert(
+                CurrencyEntity(
+                    characterId = characterId,
+                    platinum = platinum,
+                    gold = gold,
+                    silver = silver,
+                    copper = copper
+                )
             )
         }
     }
 
-    private fun CharacterEntity.toCharacter(experience: Int): Character {
+    private fun CharacterEntity.toCharacter(experience: Int, currency: CurrencyEntity): Character {
         return Character(
             id,
             name,
@@ -113,15 +119,6 @@ class CharacterRepository @Inject constructor(
     }
 
     private fun Character.toEntity(): CharacterEntity {
-        return CharacterEntity(
-            name = name,
-            currency = CharacterEntity.Currency(
-                currency.platinum,
-                currency.gold,
-                currency.silver,
-                currency.copper
-            ),
-            notes = notes
-        )
+        return CharacterEntity(name = name, notes = notes)
     }
 }
