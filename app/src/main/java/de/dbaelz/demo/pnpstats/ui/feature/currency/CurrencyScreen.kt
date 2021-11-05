@@ -8,6 +8,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -60,10 +61,11 @@ private fun CurrencyInfo(
     currency: Character.Currency,
     onEvent: (event: Event) -> Unit
 ) {
-    val platinumState = rememberCurrencyTextFieldState()
-    val goldState = rememberCurrencyTextFieldState()
-    val silverState = rememberCurrencyTextFieldState()
-    val copperState = rememberCurrencyTextFieldState()
+    val platinumState = rememberTextFieldState()
+    val goldState = rememberTextFieldState()
+    val silverState = rememberTextFieldState()
+    val copperState = rememberTextFieldState()
+    val reasonState = rememberTextFieldState(validator = { true })
 
     val keyboardController = LocalSoftwareKeyboardController.current
 
@@ -83,34 +85,42 @@ private fun CurrencyInfo(
 
         Spacer(Modifier.height(8.dp))
 
-        CurrencyTextField(labelText = "Platinum", state = platinumState)
-        CurrencyTextField(labelText = "Gold", state = goldState)
-        CurrencyTextField(labelText = "Silver", state = silverState)
-        CurrencyTextField(labelText = "Copper", state = copperState, nextKeyboardAction = {
-            keyboardController?.hide()
-        })
+        TextField(labelText = "Platinum", state = platinumState)
+        TextField(labelText = "Gold", state = goldState)
+        TextField(labelText = "Silver", state = silverState)
+        TextField(labelText = "Copper", state = copperState)
+
+        TextField(
+            labelText = "Reason",
+            state = reasonState,
+            keyboardType = KeyboardType.Text,
+            nextKeyboardAction = {
+                keyboardController?.hide()
+            }
+        )
 
         Spacer(Modifier.height(8.dp))
 
         Button(
             onClick = {
-                val states = listOf(platinumState, goldState, silverState, copperState)
+                val states = listOf(platinumState, goldState, silverState, copperState, reasonState)
 
                 states.forEach { it.validate() }
 
                 if (states.none { it.error }) {
                     onEvent(
-                        Event.AdjustCurrency(
+                        Event.AddCurrency(
                             characterId, Character.Currency(
                                 platinum = platinumState.value.toIntOrNull() ?: 0,
                                 gold = goldState.value.toIntOrNull() ?: 0,
                                 silver = silverState.value.toIntOrNull() ?: 0,
                                 copper = copperState.value.toIntOrNull() ?: 0,
-                            )
+                            ),
+                            reasonState.value
                         )
                     )
 
-                    states.forEach { it.reset() }
+                    states.forEach { it.clear() }
                 }
             },
             modifier = Modifier
@@ -123,17 +133,21 @@ private fun CurrencyInfo(
 }
 
 @Composable
-private fun rememberCurrencyTextFieldState(initialValue: String = ""): CurrencyTextFieldState {
-    return rememberSaveable(saver = CurrencyTextFieldState.Saver()) {
-        CurrencyTextFieldState(initialValue)
+private fun rememberTextFieldState(
+    initialValue: String = "",
+    validator: TextFieldState.() -> Boolean = currencyTextFieldValidator
+): TextFieldState {
+    return rememberSaveable(saver = TextFieldState.Saver(validator)) {
+        TextFieldState(initialValue, validator)
     }
 }
 
 @Composable
-private fun CurrencyTextField(
+private fun TextField(
     modifier: Modifier = Modifier,
     labelText: String,
-    state: CurrencyTextFieldState,
+    state: TextFieldState,
+    keyboardType: KeyboardType = KeyboardType.Number,
     nextKeyboardAction: KeyboardActionScope.() -> Unit = {
         defaultKeyboardAction(ImeAction.Next)
     }
@@ -142,7 +156,7 @@ private fun CurrencyTextField(
         value = state.value,
         onValueChange = { state.updateValue(it) },
         keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Number,
+            keyboardType = keyboardType,
             imeAction = ImeAction.Next
         ),
         keyboardActions = KeyboardActions(
@@ -158,7 +172,10 @@ private fun CurrencyTextField(
     )
 }
 
-private class CurrencyTextFieldState(val initialValue: String) {
+private class TextFieldState(
+    val initialValue: String,
+    val validator: TextFieldState.() -> Boolean
+) {
     var value: String by mutableStateOf(initialValue)
         private set
 
@@ -170,23 +187,23 @@ private class CurrencyTextFieldState(val initialValue: String) {
         error = false
     }
 
-    fun reset() {
-        updateValue(initialValue)
+    fun clear() {
+        updateValue("")
         error = false
     }
 
     fun validate() {
-        error = if (value.isEmpty()) {
-            false
-        } else {
-            value.toIntOrNull() == null
-        }
+        error = !validator()
     }
 
     companion object {
-        fun Saver() = androidx.compose.runtime.saveable.Saver<CurrencyTextFieldState, String>(
+        fun Saver(validator: TextFieldState.() -> Boolean) = Saver<TextFieldState, String>(
             save = { it.value },
-            restore = { CurrencyTextFieldState(it) }
+            restore = { TextFieldState(it, validator) }
         )
     }
+}
+
+private val currencyTextFieldValidator: TextFieldState.() -> Boolean = {
+    value.isEmpty() || value.toIntOrNull() != null
 }

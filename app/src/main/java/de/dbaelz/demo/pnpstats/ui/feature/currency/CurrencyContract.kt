@@ -12,7 +12,11 @@ class CurrencyContract {
     }
 
     sealed class Event : ViewEvent {
-        data class AdjustCurrency(val characterId: Int, val currency: Character.Currency) : Event()
+        data class AddCurrency(
+            val characterId: Int,
+            val currency: Character.Currency,
+            val reason: String
+        ) : Event()
     }
 
     sealed class Effect : ViewSideEffect {

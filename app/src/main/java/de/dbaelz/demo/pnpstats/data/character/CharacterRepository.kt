@@ -23,7 +23,7 @@ class CharacterRepository @Inject constructor(
             val entity = characterDao.selectById(characterId)
             if (entity != null) {
                 val experience = experienceDao.getExperienceForCharacter(entity.id)
-                val currency = currencyDao.getCurrencyForCharacter(entity.id) ?: CurrencyEntity()
+                val currency = currencyDao.getCurrencyForCharacter(entity.id)
                 character = entity.toCharacter(experience, currency)
             }
         }
@@ -43,7 +43,7 @@ class CharacterRepository @Inject constructor(
         withContext(Dispatchers.IO) {
             characterDao.selectAll().forEach {
                 val experience = experienceDao.getExperienceForCharacter(it.id)
-                val currency = currencyDao.getCurrencyForCharacter(it.id) ?: CurrencyEntity()
+                val currency = currencyDao.getCurrencyForCharacter(it.id)
                 characters.add(it.toCharacter(experience, currency))
             }
         }
@@ -88,12 +88,13 @@ class CharacterRepository @Inject constructor(
         return experience
     }
 
-    suspend fun updateCharacterCurrency(
+    suspend fun addCurrencyForCharacter(
         characterId: Int,
         platinum: Int,
         gold: Int,
         silver: Int,
-        copper: Int
+        copper: Int,
+        reason: String
     ) {
         withContext(Dispatchers.IO) {
             currencyDao.insert(
@@ -102,7 +103,8 @@ class CharacterRepository @Inject constructor(
                     platinum = platinum,
                     gold = gold,
                     silver = silver,
-                    copper = copper
+                    copper = copper,
+                    reason = reason
                 )
             )
         }

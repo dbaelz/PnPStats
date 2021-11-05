@@ -52,6 +52,7 @@ class CurrencyScreenTest {
         testRule.onNode(hasTestTag("TEST_GOLD_TEXTFIELD")).assertExists().assertIsDisplayed()
         testRule.onNode(hasTestTag("TEST_SILVER_TEXTFIELD")).assertExists().assertIsDisplayed()
         testRule.onNode(hasTestTag("TEST_COPPER_TEXTFIELD")).assertExists().assertIsDisplayed()
+        testRule.onNode(hasTestTag("TEST_REASON_TEXTFIELD")).assertExists().assertIsDisplayed()
 
         testRule.onNodeWithText("Adjust amounts")
             .assertExists()
@@ -63,6 +64,7 @@ class CurrencyScreenTest {
     fun currencyIsAddedCorrectly() {
         val characterId = 23
         val expectedCurrency = Character.Currency(11, 22, 33, 44)
+        val expectedReason = "Test Reason"
 
         var onEventFinished = false
 
@@ -73,9 +75,10 @@ class CurrencyScreenTest {
                     effectFlow = null,
                     onEvent = {
                         assertEquals(
-                            characterId, (it as CurrencyContract.Event.AdjustCurrency).characterId
+                            characterId, (it as CurrencyContract.Event.AddCurrency).characterId
                         )
                         assertEquals(expectedCurrency, it.currency)
+                        assertEquals(expectedReason, it.reason)
 
                         onEventFinished = true
                     },
@@ -92,6 +95,8 @@ class CurrencyScreenTest {
             .performTextInput(expectedCurrency.silver.toString())
         testRule.onNode(hasTestTag("TEST_COPPER_TEXTFIELD"))
             .performTextInput(expectedCurrency.copper.toString())
+        testRule.onNode(hasTestTag("TEST_REASON_TEXTFIELD"))
+            .performTextInput(expectedReason)
 
         testRule.onNodeWithText("Adjust amounts").performClick()
 
