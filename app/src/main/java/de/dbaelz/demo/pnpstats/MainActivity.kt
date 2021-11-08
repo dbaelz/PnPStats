@@ -3,6 +3,7 @@ package de.dbaelz.demo.pnpstats
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -10,6 +11,7 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -50,7 +52,7 @@ class MainActivity : ComponentActivity() {
                         val showCharactersAction =
                             currentScreen != Screen.CHARACTERS && currentScreen != Screen.CREATE_CHARACTER
 
-                        TopBar(currentScreen.displayName, showCharactersAction) {
+                        TopBar(stringResource(currentScreen.displayTextId), showCharactersAction) {
                             navController.navigate(Screen.CHARACTERS.route)
                         }
                     },
@@ -157,7 +159,7 @@ private fun PnPStatsNavHost(
         }
 
         composable(Screen.SETTINGS.route) {
-            Text("${Screen.SETTINGS.displayName} Screen")
+            Text("${stringResource(Screen.SETTINGS.displayTextId)} Screen")
         }
     }
 }
@@ -242,13 +244,13 @@ private fun CurrencyDestination(navController: NavHostController) {
     )
 }
 
-private enum class Screen(val displayName: String, val icon: ImageVector) {
-    CHARACTERS("Characters", Icons.Default.Person),
-    CREATE_CHARACTER("Create Character", Icons.Default.Person),
-    OVERVIEW("Overview", Icons.Default.Home),
-    EXPERIENCE("Experience", Icons.Default.Info),
-    CURRENCY("Currency", Icons.Default.AccountBox),
-    SETTINGS("Settings", Icons.Default.Settings);
+private enum class Screen(@StringRes val displayTextId: Int, val icon: ImageVector) {
+    CHARACTERS(R.string.characters_screen_title, Icons.Default.Person),
+    CREATE_CHARACTER(R.string.create_character_screen_title, Icons.Default.Person),
+    OVERVIEW(R.string.overview_screen_title, Icons.Default.Home),
+    EXPERIENCE(R.string.experience_screen_title, Icons.Default.Info),
+    CURRENCY(R.string.currency_screen_title, Icons.Default.AccountBox),
+    SETTINGS(R.string.settings_screen_title, Icons.Default.Settings);
 
     val route = name
 }

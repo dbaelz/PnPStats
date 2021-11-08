@@ -2,10 +2,10 @@ package de.dbaelz.demo.pnpstats.ui.feature.experience
 
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import de.dbaelz.demo.pnpstats.data.experience.usecase.AddCharacterExperienceUseCase
-import de.dbaelz.demo.pnpstats.data.experience.usecase.GetCharacterExperienceDetailsUseCase
 import de.dbaelz.demo.pnpstats.data.character.usecase.GetLastCharacterUseCase
 import de.dbaelz.demo.pnpstats.data.common.ApiResult
+import de.dbaelz.demo.pnpstats.data.experience.usecase.AddCharacterExperienceUseCase
+import de.dbaelz.demo.pnpstats.data.experience.usecase.GetCharacterExperienceDetailsUseCase
 import de.dbaelz.demo.pnpstats.ui.feature.BaseViewModel
 import de.dbaelz.demo.pnpstats.ui.feature.experience.ExperienceContract.*
 import kotlinx.coroutines.launch

@@ -1,3 +1,30 @@
 <resources>
     <string name="app_name">PnP Stats</string>
+
+    <string name="loading_indicator_text">Loading…</string>
+    <string name="overview_screen_title">Overview</string>
+    <string name="characters_screen_title">Characters</string>
+    <string name="settings_screen_title">Settings</string>
+
+    <string name="experience_screen_title">Experience</string>
+    <string name="experience_input_label">Experience</string>
+    <string name="experience_reason_input_label">Reason</string>
+    <string name="experience_log_title">Experience Log</string>
+    <string name="experience_value_formatted">%1$s XP</string>
+
+    <string name="currency_screen_title">Currency</string>
+    <string name="currency_input_title">Add/subtract amounts</string>
+    <string name="currency_platinum">Platinum</string>
+    <string name="currency_gold">Gold</string>
+    <string name="currency_silver">Silver</string>
+    <string name="currency_copper">Copper</string>
+    <string name="currency_reason_input_label">Reason</string>
+    <string name="currency_button_text">Adjust amounts</string>
+
+    <string name="create_character_screen_title">Create Character</string>
+    <string name="create_character_input_label">Name</string>
+    <string name="create_character_button_text">Create Character</string>
+
+    <string name="characters_delete_content_description">delete character</string>
+
 </resources>

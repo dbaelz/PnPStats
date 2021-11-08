@@ -26,7 +26,7 @@ class CharactersScreenTest {
             }
         }
 
-        testRule.onNodeWithText("Loading...").assertExists().assertIsDisplayed()
+        testRule.onNodeWithText("Loading…").assertExists().assertIsDisplayed()
     }
 
     @Test

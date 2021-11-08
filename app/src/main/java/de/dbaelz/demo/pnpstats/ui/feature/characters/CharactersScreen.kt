@@ -14,8 +14,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import de.dbaelz.demo.pnpstats.R
 import de.dbaelz.demo.pnpstats.data.character.Character
 import de.dbaelz.demo.pnpstats.data.character.toFormattedString
 import de.dbaelz.demo.pnpstats.ui.feature.LAUNCHED_EFFECT_KEY
@@ -92,7 +94,7 @@ private fun CharactersList(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Delete,
-                            contentDescription = "delete character",
+                            contentDescription = stringResource(R.string.characters_delete_content_description),
                             modifier = Modifier
                                 .padding(16.dp)
                                 .fillMaxHeight()
@@ -129,7 +131,7 @@ private fun CharacterListCard(character: Character, onCharacterSelected: (Int) -
             )
 
             Text(
-                text = "${character.experience} XP",
+                text = stringResource(R.string.experience_value_formatted, character.experience),
                 style = MaterialTheme.typography.h6
             )
 

@@ -10,8 +10,10 @@ import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import de.dbaelz.demo.pnpstats.R
 import de.dbaelz.demo.pnpstats.ui.feature.LAUNCHED_EFFECT_KEY
 import de.dbaelz.demo.pnpstats.ui.feature.createcharacter.CreateCharacterContract.Event
 import de.dbaelz.demo.pnpstats.ui.feature.createcharacter.CreateCharacterContract.NavigateToCharactersEffect
@@ -44,7 +46,7 @@ fun CreateCharacterScreen(
         OutlinedTextField(
             value = textFieldValue,
             onValueChange = { textFieldValue = it },
-            label = { Text("Name") },
+            label = { Text(stringResource(R.string.create_character_input_label)) },
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -58,7 +60,7 @@ fun CreateCharacterScreen(
                 .height(TextFieldDefaults.MinHeight)
                 .fillMaxWidth()
         ) {
-            Text("Create Character")
+            Text(stringResource(R.string.create_character_button_text))
         }
     }
 }

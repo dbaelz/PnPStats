@@ -15,9 +15,11 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import de.dbaelz.demo.pnpstats.R
 import de.dbaelz.demo.pnpstats.data.character.Character
 import de.dbaelz.demo.pnpstats.ui.feature.LAUNCHED_EFFECT_KEY
 import de.dbaelz.demo.pnpstats.ui.feature.common.CurrencyRectangle
@@ -81,17 +83,20 @@ private fun CurrencyInfo(
 
         Spacer(Modifier.height(24.dp))
 
-        Text(text = "Add/subtract amounts", style = MaterialTheme.typography.h5)
+        Text(
+            text = stringResource(R.string.currency_input_title),
+            style = MaterialTheme.typography.h5
+        )
 
         Spacer(Modifier.height(8.dp))
 
-        TextField(labelText = "Platinum", state = platinumState)
-        TextField(labelText = "Gold", state = goldState)
-        TextField(labelText = "Silver", state = silverState)
-        TextField(labelText = "Copper", state = copperState)
+        TextField(labelText = stringResource(R.string.currency_platinum), state = platinumState)
+        TextField(labelText = stringResource(R.string.currency_gold), state = goldState)
+        TextField(labelText = stringResource(R.string.currency_silver), state = silverState)
+        TextField(labelText = stringResource(R.string.currency_copper), state = copperState)
 
         TextField(
-            labelText = "Reason",
+            labelText = stringResource(R.string.currency_reason_input_label),
             state = reasonState,
             keyboardType = KeyboardType.Text,
             nextKeyboardAction = {
@@ -127,7 +132,7 @@ private fun CurrencyInfo(
                 .height(TextFieldDefaults.MinHeight)
                 .fillMaxWidth()
         ) {
-            Text("Adjust amounts")
+            Text(stringResource(R.string.currency_button_text))
         }
     }
 }

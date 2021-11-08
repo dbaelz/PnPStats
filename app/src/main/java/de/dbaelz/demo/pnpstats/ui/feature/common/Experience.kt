@@ -8,14 +8,16 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.layout
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import de.dbaelz.demo.pnpstats.R
 
 @Composable
 fun ExperienceCircle(experience: Int) {
     Text(
-        text = "$experience XP",
+        text = stringResource(R.string.experience_value_formatted, experience.toString()),
         style = MaterialTheme.typography.h5,
         fontWeight = FontWeight.Bold,
         textAlign = TextAlign.Center,

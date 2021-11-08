@@ -16,11 +16,13 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import de.dbaelz.demo.pnpstats.R
 import de.dbaelz.demo.pnpstats.ui.feature.LAUNCHED_EFFECT_KEY
 import de.dbaelz.demo.pnpstats.ui.feature.common.ExperienceCircle
 import de.dbaelz.demo.pnpstats.ui.feature.common.LoadingIndicator
@@ -74,7 +76,7 @@ fun ExperienceScreen(
                     if (state.experienceDetails.isNotEmpty()) {
                         item {
                             Text(
-                                text = "Experience Log",
+                                text = stringResource(id = R.string.experience_log_title),
                                 style = MaterialTheme.typography.h5,
                                 fontWeight = FontWeight.Bold,
                                 textAlign = TextAlign.Center,
@@ -136,7 +138,7 @@ private fun ExperienceInput(
     OutlinedTextField(
         value = experienceInput,
         onValueChange = { experienceInput = it },
-        label = { Text("Experience") },
+        label = { Text(stringResource(id = R.string.experience_input_label)) },
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Number,
             imeAction = ImeAction.Next
@@ -153,7 +155,7 @@ private fun ExperienceInput(
     OutlinedTextField(
         value = reasonInput,
         onValueChange = { reasonInput = it },
-        label = { Text("Reason") },
+        label = { Text(stringResource(id = R.string.experience_reason_input_label)) },
         keyboardOptions = KeyboardOptions(
             imeAction = ImeAction.Done
         ),

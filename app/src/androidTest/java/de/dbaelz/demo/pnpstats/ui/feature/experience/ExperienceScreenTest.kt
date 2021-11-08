@@ -27,7 +27,7 @@ class ExperienceScreenTest {
             }
         }
 
-        testRule.onNodeWithText("Loading...").assertExists()
+        testRule.onNodeWithText("Loading…").assertExists()
     }
 
     @Test
@@ -49,7 +49,7 @@ class ExperienceScreenTest {
             }
         }
 
-        testRule.onNodeWithText("Loading...").assertDoesNotExist()
+        testRule.onNodeWithText("Loading…").assertDoesNotExist()
         testRule.onNodeWithText("$initialExperience XP").assertExists().assertIsDisplayed()
         testRule.onNode(hasTestTag("TEST_EXPERIENCE_TEXTFIELD")).assertExists().assertIsDisplayed()
         testRule.onNodeWithContentDescription(Icons.Default.AddCircle.name)

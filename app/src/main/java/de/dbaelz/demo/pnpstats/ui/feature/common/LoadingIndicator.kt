@@ -7,6 +7,8 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import de.dbaelz.demo.pnpstats.R
 
 @Composable
 fun LoadingIndicator() {
@@ -15,6 +17,9 @@ fun LoadingIndicator() {
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        Text(text = "Loading...", style = MaterialTheme.typography.h3)
+        Text(
+            text = stringResource(R.string.loading_indicator_text),
+            style = MaterialTheme.typography.h3
+        )
     }
 }

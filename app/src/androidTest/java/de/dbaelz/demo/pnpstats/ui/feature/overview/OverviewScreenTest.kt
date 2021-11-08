@@ -28,7 +28,7 @@ class OverviewScreenTest {
             }
         }
 
-        testRule.onNodeWithText("Loading...").assertExists()
+        testRule.onNodeWithText("Loading…").assertExists()
     }
 
     @Test

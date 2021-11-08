@@ -26,7 +26,7 @@ class CurrencyScreenTest {
             }
         }
 
-        testRule.onNodeWithText("Loading...").assertExists()
+        testRule.onNodeWithText("Loading…").assertExists()
     }
 
     @Test
