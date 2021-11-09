@@ -20,6 +20,7 @@
     <string name="currency_copper">Copper</string>
     <string name="currency_reason_input_label">Reason</string>
     <string name="currency_button_text">Adjust amounts</string>
+    <string name="currency_log_title">Currency Log</string>
 
     <string name="create_character_screen_title">Create Character</string>
     <string name="create_character_input_label">Name</string>

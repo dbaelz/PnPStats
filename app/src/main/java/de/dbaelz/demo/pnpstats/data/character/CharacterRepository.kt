@@ -110,17 +110,39 @@ class CharacterRepository @Inject constructor(
         }
     }
 
+    suspend fun getCurrencyDetailsForCharacter(characterId: Int): List<Pair<Character.Currency, String>> {
+        val currency = mutableListOf<Pair<Character.Currency, String>>()
+
+        withContext(Dispatchers.IO) {
+            currency.addAll(
+                currencyDao.getCurrencyDetails(characterId).map {
+                    it.toCurrency() to it.reason
+                })
+        }
+
+        return currency
+    }
+
     private fun CharacterEntity.toCharacter(experience: Int, currency: CurrencyEntity): Character {
         return Character(
             id,
             name,
             experience,
-            Character.Currency(currency.platinum, currency.gold, currency.silver, currency.copper),
+            currency.toCurrency(),
             notes
         )
     }
 
     private fun Character.toEntity(): CharacterEntity {
         return CharacterEntity(name = name, notes = notes)
+    }
+
+    private fun CurrencyEntity.toCurrency(): Character.Currency {
+        return Character.Currency(
+            platinum = platinum,
+            gold = gold,
+            silver = silver,
+            copper = copper
+        )
     }
 }

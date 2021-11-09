@@ -8,7 +8,11 @@ import de.dbaelz.demo.pnpstats.ui.feature.ViewState
 class CurrencyContract {
     sealed class State : ViewState {
         object Loading : State()
-        data class CurrencyInfo(val characterId: Int, val currency: Character.Currency) : State()
+        data class CurrencyInfo(
+            val characterId: Int,
+            val currency: Character.Currency,
+            val currencyDetails: List<Pair<Character.Currency, String>>
+        ) : State()
     }
 
     sealed class Event : ViewEvent {

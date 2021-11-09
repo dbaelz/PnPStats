@@ -36,7 +36,7 @@ class CurrencyScreenTest {
         testRule.setContent {
             MaterialTheme {
                 CurrencyScreen(
-                    state = CurrencyContract.State.CurrencyInfo(1, expectedCurrency),
+                    state = CurrencyContract.State.CurrencyInfo(1, expectedCurrency, emptyList()),
                     effectFlow = null,
                     onEvent = {},
                     onNavigation = {}
@@ -71,7 +71,11 @@ class CurrencyScreenTest {
         testRule.setContent {
             MaterialTheme {
                 CurrencyScreen(
-                    state = CurrencyContract.State.CurrencyInfo(characterId, Character.Currency()),
+                    state = CurrencyContract.State.CurrencyInfo(
+                        characterId,
+                        Character.Currency(),
+                        emptyList()
+                    ),
                     effectFlow = null,
                     onEvent = {
                         assertEquals(
@@ -101,5 +105,54 @@ class CurrencyScreenTest {
         testRule.onNodeWithText("Adjust amounts").performClick()
 
         testRule.waitUntil { onEventFinished }
+    }
+
+    @Test
+    fun currencyDetailsAreShown() {
+        val currencyDetails = listOf(
+            Character.Currency(-1, -1, -3, -4) to "REMOVE",
+            Character.Currency(11, 22, 33, 44) to "",
+            Character.Currency(0, 0, 0, 0) to "",
+            Character.Currency(111, 222, 333, 444) to "ADD",
+        )
+
+        testRule.setContent {
+            MaterialTheme {
+                CurrencyScreen(
+                    state = CurrencyContract.State.CurrencyInfo(
+                        1,
+                        Character.Currency(),
+                        currencyDetails
+                    ),
+                    effectFlow = null,
+                    onEvent = {},
+                    onNavigation = {}
+                )
+            }
+        }
+
+        testRule.onNodeWithText("Currency Log").assertExists()
+    }
+
+    @Test
+    fun currencyDetailsAreNotShownWhenEmpty() {
+        val currencyDetails = emptyList<Pair<Character.Currency, String>>()
+
+        testRule.setContent {
+            MaterialTheme {
+                CurrencyScreen(
+                    state = CurrencyContract.State.CurrencyInfo(
+                        1,
+                        Character.Currency(),
+                        currencyDetails
+                    ),
+                    effectFlow = null,
+                    onEvent = {},
+                    onNavigation = {}
+                )
+            }
+        }
+
+        testRule.onNodeWithText("Currency Log").assertDoesNotExist()
     }
 }

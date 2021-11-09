@@ -3,6 +3,7 @@ package de.dbaelz.demo.pnpstats.ui.feature.currency
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardActionScope
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -16,11 +17,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import de.dbaelz.demo.pnpstats.R
 import de.dbaelz.demo.pnpstats.data.character.Character
+import de.dbaelz.demo.pnpstats.data.character.toFormattedString
 import de.dbaelz.demo.pnpstats.ui.feature.LAUNCHED_EFFECT_KEY
 import de.dbaelz.demo.pnpstats.ui.feature.common.CurrencyRectangle
 import de.dbaelz.demo.pnpstats.ui.feature.common.LoadingIndicator
@@ -85,12 +89,28 @@ fun CurrencyScreen(
                         }
                     }
                 },
-                details = {}
+                details = {
+                    if (state.currencyDetails.isNotEmpty()) {
+                        item {
+                            Text(
+                                text = stringResource(id = R.string.currency_log_title),
+                                style = MaterialTheme.typography.h5,
+                                fontWeight = FontWeight.Bold,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.paddingFromBaseline(bottom = 16.dp)
+                            )
+                        }
+
+                        items(items = state.currencyDetails) { item ->
+                            Divider(Modifier.padding(vertical = 4.dp))
+                            CurrencyDetailItem(item)
+                        }
+                    }
+                }
             )
         }
     }
 }
-
 
 @Composable
 private fun CurrencyInfo(
@@ -161,6 +181,27 @@ private fun CurrencyInput(
             .fillMaxWidth()
     ) {
         Text(stringResource(R.string.currency_button_text))
+    }
+}
+
+@Composable
+private fun CurrencyDetailItem(item: Pair<Character.Currency, String>) {
+    if (item.second.isNotEmpty()) {
+        Row(Modifier.fillMaxWidth()) {
+            Column(modifier = Modifier.weight(0.25f)) {
+                Text(text = "${item.first.platinum} pp")
+                Text(text = "${item.first.gold} gp")
+                Text(text = "${item.first.silver} sp")
+                Text(text = "${item.first.copper} cp")
+            }
+
+            Text(text = item.second, modifier = Modifier.weight(0.75f))
+        }
+    } else {
+        Text(
+            text = item.first.toFormattedString(),
+            modifier = Modifier.fillMaxWidth()
+        )
     }
 }
 
