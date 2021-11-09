@@ -1,11 +1,11 @@
 package de.dbaelz.demo.pnpstats.ui.feature.currency
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.text.KeyboardActionScope
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.Saver
@@ -52,88 +52,115 @@ fun CurrencyScreen(
 
     when (state) {
         State.Loading -> LoadingIndicator()
-        is State.CurrencyInfo -> CurrencyInfo(state.characterId, state.currency, onEvent)
+        is State.CurrencyInfo -> {
+            CurrencyInfo(
+                info = { CurrencyRectangle(state.currency) },
+                input = {
+                    val platinumState = rememberTextFieldState()
+                    val goldState = rememberTextFieldState()
+                    val silverState = rememberTextFieldState()
+                    val copperState = rememberTextFieldState()
+                    val reasonState = rememberTextFieldState(validator = { true })
+
+                    CurrencyInput(platinumState, goldState, silverState, copperState, reasonState) {
+                        val states =
+                            listOf(platinumState, goldState, silverState, copperState, reasonState)
+
+                        states.forEach { it.validate() }
+
+                        if (states.none { it.error }) {
+                            onEvent(
+                                Event.AddCurrency(
+                                    state.characterId, Character.Currency(
+                                        platinum = platinumState.value.toIntOrNull() ?: 0,
+                                        gold = goldState.value.toIntOrNull() ?: 0,
+                                        silver = silverState.value.toIntOrNull() ?: 0,
+                                        copper = copperState.value.toIntOrNull() ?: 0,
+                                    ),
+                                    reasonState.value
+                                )
+                            )
+
+                            states.forEach { it.clear() }
+                        }
+                    }
+                },
+                details = {}
+            )
+        }
+    }
+}
+
+
+@Composable
+private fun CurrencyInfo(
+    info: @Composable () -> Unit,
+    input: @Composable () -> Unit,
+    details: LazyListScope.() -> Unit
+) {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        item {
+            info()
+            Spacer(Modifier.height(24.dp))
+        }
+
+        item {
+            input()
+            Spacer(Modifier.height(24.dp))
+        }
+
+        details()
     }
 }
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-private fun CurrencyInfo(
-    characterId: Int,
-    currency: Character.Currency,
-    onEvent: (event: Event) -> Unit
+private fun CurrencyInput(
+    platinumState: TextFieldState,
+    goldState: TextFieldState,
+    silverState: TextFieldState,
+    copperState: TextFieldState,
+    reasonState: TextFieldState,
+    onButtonClicked: () -> Unit
 ) {
-    val platinumState = rememberTextFieldState()
-    val goldState = rememberTextFieldState()
-    val silverState = rememberTextFieldState()
-    val copperState = rememberTextFieldState()
-    val reasonState = rememberTextFieldState(validator = { true })
-
     val keyboardController = LocalSoftwareKeyboardController.current
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-            .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        CurrencyRectangle(currency)
+    Text(
+        text = stringResource(R.string.currency_input_title),
+        style = MaterialTheme.typography.h5
+    )
 
-        Spacer(Modifier.height(24.dp))
+    Spacer(Modifier.height(8.dp))
 
-        Text(
-            text = stringResource(R.string.currency_input_title),
-            style = MaterialTheme.typography.h5
-        )
+    TextField(labelText = stringResource(R.string.currency_platinum), state = platinumState)
+    TextField(labelText = stringResource(R.string.currency_gold), state = goldState)
+    TextField(labelText = stringResource(R.string.currency_silver), state = silverState)
+    TextField(labelText = stringResource(R.string.currency_copper), state = copperState)
 
-        Spacer(Modifier.height(8.dp))
-
-        TextField(labelText = stringResource(R.string.currency_platinum), state = platinumState)
-        TextField(labelText = stringResource(R.string.currency_gold), state = goldState)
-        TextField(labelText = stringResource(R.string.currency_silver), state = silverState)
-        TextField(labelText = stringResource(R.string.currency_copper), state = copperState)
-
-        TextField(
-            labelText = stringResource(R.string.currency_reason_input_label),
-            state = reasonState,
-            keyboardType = KeyboardType.Text,
-            nextKeyboardAction = {
-                keyboardController?.hide()
-            }
-        )
-
-        Spacer(Modifier.height(8.dp))
-
-        Button(
-            onClick = {
-                val states = listOf(platinumState, goldState, silverState, copperState, reasonState)
-
-                states.forEach { it.validate() }
-
-                if (states.none { it.error }) {
-                    onEvent(
-                        Event.AddCurrency(
-                            characterId, Character.Currency(
-                                platinum = platinumState.value.toIntOrNull() ?: 0,
-                                gold = goldState.value.toIntOrNull() ?: 0,
-                                silver = silverState.value.toIntOrNull() ?: 0,
-                                copper = copperState.value.toIntOrNull() ?: 0,
-                            ),
-                            reasonState.value
-                        )
-                    )
-
-                    states.forEach { it.clear() }
-                }
-            },
-            modifier = Modifier
-                .height(TextFieldDefaults.MinHeight)
-                .fillMaxWidth()
-        ) {
-            Text(stringResource(R.string.currency_button_text))
+    TextField(
+        labelText = stringResource(R.string.currency_reason_input_label),
+        state = reasonState,
+        keyboardType = KeyboardType.Text,
+        nextKeyboardAction = {
+            keyboardController?.hide()
         }
+    )
+
+    Spacer(Modifier.height(8.dp))
+
+    Button(
+        onClick = onButtonClicked,
+        modifier = Modifier
+            .height(TextFieldDefaults.MinHeight)
+            .fillMaxWidth()
+    ) {
+        Text(stringResource(R.string.currency_button_text))
     }
 }
 
